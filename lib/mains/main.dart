@@ -49,7 +49,6 @@ class _MyHomePageState extends State<MyHomePage> {
   void _incrementCounter(BuildContext context) {
     AppRouter().pushNamed("/page2");
     return;
-    
   }
 
   @override
