@@ -5,11 +5,11 @@ import 'mains/main.dart';
 
 void main() {
   FlavorConfig(
-    name: "Stg",
-    color: Colors.red,
+    name: "Prod",
+    color: Colors.green,
     location: BannerLocation.bottomStart,
     variables: {
-      "c": Colors.red,
+      "c": Colors.green,
       "baseUrl": "https://www.example.com",
     },
   );
