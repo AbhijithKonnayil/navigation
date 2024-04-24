@@ -2,7 +2,6 @@ import 'package:auto_route/auto_route.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
-import 'package:navigation/page1.dart';
 import 'package:navigation/routes/router.dart';
 
 import '../firebase_options.dart';
@@ -22,7 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'PR 2',
+      title: 'PR 13',
       theme: ThemeData(
           //colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           // useMaterial3: true,
@@ -34,7 +33,7 @@ class MyApp extends StatelessWidget {
 
 @RoutePage()
 class MyHomePage extends StatefulWidget {
-  MyHomePage({
+  const MyHomePage({
     super.key,
   });
 
@@ -45,14 +44,11 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  final _counter = 0;
 
   void _incrementCounter(BuildContext context) {
     AppRouter().pushNamed("/page2");
     return;
-    setState(() {
-      _counter++;
-    });
   }
 
   @override
