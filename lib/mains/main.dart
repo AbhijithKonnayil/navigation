@@ -1,11 +1,17 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:navigation/page1.dart';
 import 'package:navigation/routes/router.dart';
 
+import '../firebase_options.dart';
 
-startApp(){
+
+startApp() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+);
   runApp(MyApp());
 }
 class MyApp extends StatelessWidget {
@@ -16,7 +22,7 @@ final _appRouter =  AppRouter();
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Flutter Patch 6',
+      title: 'PR 1',
       theme: ThemeData(
         //colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
        // useMaterial3: true,
