@@ -22,7 +22,7 @@ final _appRouter =  AppRouter();
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'PR 1',
+      title: 'PR 2',
       theme: ThemeData(
         //colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
        // useMaterial3: true,
