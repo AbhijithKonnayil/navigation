@@ -19,7 +19,6 @@ jobs:
       # Get flutter dependencies.
       - run: flutter pub get
       - uses: actions/checkout@v2
-        working-directory: ./android
       - run: |
           cd  android
           fastlane beta2
