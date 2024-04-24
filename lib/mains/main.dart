@@ -1,26 +1,32 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:navigation/page1.dart';
 import 'package:navigation/routes/router.dart';
 
+import '../firebase_options.dart';
 
-startApp(){
+startApp() async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   runApp(MyApp());
 }
-class MyApp extends StatelessWidget {
-   MyApp({super.key});
 
-final _appRouter =  AppRouter();
+class MyApp extends StatelessWidget {
+  MyApp({super.key});
+
+  final _appRouter = AppRouter();
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'Flutter Patch 6',
+      title: 'PR 2',
       theme: ThemeData(
-        //colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-       // useMaterial3: true,
-      ),
+          //colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          // useMaterial3: true,
+          ),
       routerConfig: _appRouter.config(),
     );
   }
@@ -28,7 +34,9 @@ final _appRouter =  AppRouter();
 
 @RoutePage()
 class MyHomePage extends StatefulWidget {
-   MyHomePage({super.key,});
+  MyHomePage({
+    super.key,
+  });
 
   final String title = "Title Bar";
 
@@ -40,8 +48,8 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
 
   void _incrementCounter(BuildContext context) {
-AppRouter().pushNamed("/page2");
-return;
+    AppRouter().pushNamed("/page2");
+    return;
     setState(() {
       _counter++;
     });
@@ -49,7 +57,8 @@ return;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: FlavorConfig.instance.variables["c"],
+    return Scaffold(
+      backgroundColor: FlavorConfig.instance.variables["c"],
       appBar: AppBar(
         title: Text(widget.title),
       ),
@@ -68,7 +77,7 @@ return;
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: ()=>_incrementCounter(context),
+        onPressed: () => _incrementCounter(context),
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
