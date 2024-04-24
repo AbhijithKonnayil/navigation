@@ -20,6 +20,8 @@ jobs:
       - run: flutter pub get
       - uses: actions/checkout@v2
         working-directory: ./android
-      - run: fastlane beta2
+      - run: |
+          cd  android
+          fastlane beta2
         #env:
         #  MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
