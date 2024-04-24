@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(
-      title: 'PR 2',
+      title: 'PR 6',
       theme: ThemeData(
           //colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           // useMaterial3: true,
