@@ -71,6 +71,14 @@ Deploy a new version to the Google Play
 
 Build
 
+### android increment_version_firebase
+
+```sh
+[bundle exec] fastlane android increment_version_firebase
+```
+
+Increment Version
+
 ### android beta2
 
 ```sh

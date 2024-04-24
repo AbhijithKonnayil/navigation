@@ -60,11 +60,18 @@ platform :android do
       sh("flutter","build","apk","--flavor","prodGlobal","-t" ,"lib/mains/main_global_prod.dart")
     end
   end
-  
+
+  desc "Increment Version"
+  lane :increment_version_firebase do
+      latest_release = firebase_app_distribution_get_latest_release(
+        app: "1:337613462775:android:a0562f974110a561b907f2",
+      )
+      increment_version_code({ version_code: latest_release[:buildVersion].to_i + 1 })
+  end
+
   desc "Submit a new Beta Build to Firebase App Distribution"
   lane :beta2 do
-    #increment_version_code(gradle_file_path: "./app/build.gradle",
-    #version_code: 1)
+    increment_version_firebase
     build
     print Dir.pwd
     firebase_app_distribution(
