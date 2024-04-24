@@ -19,6 +19,7 @@ jobs:
       # Get flutter dependencies.
       - run: flutter pub get
       - uses: actions/checkout@v2
+        working-directory: ./android
       - run: fastlane beta2
-        env:
-          MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        #env:
+        #  MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
