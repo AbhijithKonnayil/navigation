@@ -17,8 +17,20 @@ default_platform(:android)
 
 platform :android do
   desc "Runs all the tests"
-  lane :test do
+  lane :test1 do
     gradle(task: "test")
+  end
+  lane :test do
+    # Run your Flutter tests
+    sh("flutter test")
+  end
+
+  desc "Increment Version"
+    lane :increment_version do
+        latest_release = firebase_app_distribution_get_latest_release(
+          app: "1:337613462775:android:a0562f974110a561b907f2"
+        )
+        increment_version_code({ version_code: latest_release[:buildVersion].to_i + 1 })
   end
 
   desc "Submit a new Beta Build to Crashlytics Beta"
@@ -34,5 +46,40 @@ platform :android do
   lane :deploy do
     gradle(task: "clean assembleRelease")
     upload_to_play_store
+  end
+
+  lane :beta1 do
+      increment_version_code(
+          gradle_file_path: "./app/build.gradle",
+      )
+  end
+
+  desc "Build"
+  lane :build do
+    Dir.chdir '../..' do
+      sh("flutter","build","apk","--flavor","prodGlobal","-t" ,"lib/mains/main_global_prod.dart")
+    end
+  end
+
+  desc "Increment Version"
+  lane :increment_version_firebase do
+      latest_release = firebase_app_distribution_get_latest_release(
+        app: "1:337613462775:android:a0562f974110a561b907f2",
+      )
+      increment_version_code({ version_code: latest_release[:buildVersion].to_i + 1 })
+  end
+
+  desc "Submit a new Beta Build to Firebase App Distribution"
+  lane :beta2 do
+    increment_version_firebase
+    build
+    print Dir.pwd
+    firebase_app_distribution(
+      app: "1:337613462775:android:a0562f974110a561b907f2",
+      groups: "group-one",
+      release_notes: "Lots of new avatars to try out!",
+      android_artifact_type: "APK",
+      apk_path: "../build/app/outputs/apk/prodGlobal/release/app-prod-global-release.apk",
+    )
   end
 end

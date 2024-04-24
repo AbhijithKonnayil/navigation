@@ -22,6 +22,9 @@ if (flutterVersionName == null) {
 }
 
 apply plugin: 'com.android.application'
+// START: FlutterFire Configuration
+apply plugin: 'com.google.gms.google-services'
+// END: FlutterFire Configuration
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
@@ -50,7 +53,7 @@ android {
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
-        versionCode flutterVersionCode.toInteger()
+        versionCode 2
         versionName flutterVersionName
         //setProperty("archivesBaseName", "${variant.productFlavors[0].name}")
 
@@ -82,13 +85,13 @@ android {
             
         }
          india {
-            applicationIdSuffix ".in"
+            //applicationIdSuffix ".in"
             dimension "country"
             manifestPlaceholders += [countryCode:"in"]
             manifestPlaceholders = [autoVerifyValue: true]
         }
         global {
-            applicationIdSuffix ".gl"
+            //applicationIdSuffix ".gl"
             dimension "country"
             manifestPlaceholders += [countryCode:"global"]
             manifestPlaceholders = [autoVerifyValue: false]
