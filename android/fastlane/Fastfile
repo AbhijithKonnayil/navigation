@@ -75,7 +75,7 @@ platform :android do
     build
     print Dir.pwd
     firebase_app_distribution(
-      firebase_cli_token:"1//0gyURlXKUChfsCgYIARAAGBASNwF-L9IrYxMzphO9djvnPRkmSl_BsYz9qoEK6k5nadDwTDd-ULOLwYVJx_dA5JPpOF8Q_F_LpbI",
+      firebase_cli_token:"0gyURlXKUChfsCgYIARAAGBASNwF-L9IrYxMzphO9djvnPRkmSl_BsYz9qoEK6k5nadDwTDd-ULOLwYVJx_dA5JPpOF8Q_F_LpbI",
       app: "1:337613462775:android:a0562f974110a561b907f2",
       groups: "group-one",
       release_notes: "Lots of new avatars to try out!",
