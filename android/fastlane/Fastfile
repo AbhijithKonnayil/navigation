@@ -53,19 +53,20 @@ platform :android do
           gradle_file_path: "./app/build.gradle",
       )
   end
+
   desc "Build"
   lane :build do
-    gradle(
-       task: "assemble",
-       flavor: "prodGlobal",
-       build_type: "Release"
-     )
+    Dir.chdir '../..' do
+      sh("flutter","build","apk","--flavor","prodGlobal","-t" ,"lib/mains/main_global_prod.dart")
+    end
   end
+  
   desc "Submit a new Beta Build to Firebase App Distribution"
   lane :beta2 do
-    increment_version_code(gradle_file_path: "./app/build.gradle",
-    version_code: 1)
+    #increment_version_code(gradle_file_path: "./app/build.gradle",
+    #version_code: 1)
     build
+    print Dir.pwd
     firebase_app_distribution(
       app: "1:337613462775:android:a0562f974110a561b907f2",
       groups: "group-one",
