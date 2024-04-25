@@ -51,9 +51,9 @@ android {
         applicationId "com.example.navigation"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 19
         targetSdkVersion flutter.targetSdkVersion
-        versionCode 2
+        versionCode 5
         versionName flutterVersionName
         //setProperty("archivesBaseName", "${variant.productFlavors[0].name}")
 

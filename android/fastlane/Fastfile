@@ -65,6 +65,8 @@ platform :android do
   lane :increment_version_firebase do
       latest_release = firebase_app_distribution_get_latest_release(
         app: "1:337613462775:android:a0562f974110a561b907f2",
+        firebase_cli_token:"1//0gpNf1dSBGjKzCgYIARAAGBASNwF-L9IrlMxpvT_RX--bKUHpFoIxlgJxeoJnF4Z8vFir9kMSKV5qyaloVV6O-XORXErf_vIToQE",
+      
       )
       increment_version_code({ version_code: latest_release[:buildVersion].to_i + 1 })
   end
@@ -75,12 +77,18 @@ platform :android do
     build
     print Dir.pwd
     firebase_app_distribution(
-      firebase_cli_token:"0gyURlXKUChfsCgYIARAAGBASNwF-L9IrYxMzphO9djvnPRkmSl_BsYz9qoEK6k5nadDwTDd-ULOLwYVJx_dA5JPpOF8Q_F_LpbI",
+      #1//0gyURlXKUChfsCgYIARAAGBASNwF-L9IrYxMzphO9djvnPRkmSl_BsYz9qoEK6k5nadDwTDd-ULOLwYVJx_dA5JPpOF8Q_F_LpbI
+      firebase_cli_token:"1//0gpNf1dSBGjKzCgYIARAAGBASNwF-L9IrlMxpvT_RX--bKUHpFoIxlgJxeoJnF4Z8vFir9kMSKV5qyaloVV6O-XORXErf_vIToQE",
       app: "1:337613462775:android:a0562f974110a561b907f2",
       groups: "group-one",
       release_notes: "Lots of new avatars to try out!",
       android_artifact_type: "APK",
       apk_path: "../build/app/outputs/apk/prodGlobal/release/app-prod-global-release.apk",
     )
+  end
+
+  desc "beta 3"
+  lane :beta3 do
+    firebase_app_distribution_get_udids
   end
 end
