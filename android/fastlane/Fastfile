@@ -78,7 +78,7 @@ platform :android do
     print Dir.pwd
     firebase_app_distribution(
       #1//0gyURlXKUChfsCgYIARAAGBASNwF-L9IrYxMzphO9djvnPRkmSl_BsYz9qoEK6k5nadDwTDd-ULOLwYVJx_dA5JPpOF8Q_F_LpbI
-      firebase_cli_token:${{secrets.FIREBASE_CLI_TOKEN}},
+      firebase_cli_token:"1//0gpNf1dSBGjKzCgYIARAAGBASNwF-L9IrlMxpvT_RX--bKUHpFoIxlgJxeoJnF4Z8vFir9kMSKV5qyaloVV6O-XORXErf_vIToQE",
       app: "1:337613462775:android:a0562f974110a561b907f2",
       groups: "group-one",
       release_notes: "Lots of new avatars to try out!",
