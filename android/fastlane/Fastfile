@@ -55,7 +55,14 @@ platform :android do
   end
 
   desc "Build"
-  lane :build do |options|
+  lane :build do
+    Dir.chdir '../..' do
+      sh("flutter","build","apk","--flavor","prodGlobal","-t" ,"lib/mains/main_global_prod.dart")
+    end
+  end
+
+  desc "Build"
+  lane :build2 do |options|
     print "flavor\n"
     flavor = options[:flavor]
     print  flavor
@@ -92,8 +99,24 @@ platform :android do
 
   desc "beta 3"
   lane :beta3 do |options|
-    print  "hoi\n"
-    print options[:tag]
-    build(flavor:options[:tag])
+    print  "Beta 3"
+    flavor = options[:flavor]
+    matches = flavor.split /(?=[A-Z])/
+  	country=matches[1].downcase
+    environment=matches[0]
+    apk_path = "../build/app/outputs/apk/#{flavor}/release/app-#{environment}-#{country}-release.apk"
+    release_notes = options[:release_notes]
+    puts release_notes
+    increment_version_firebase
+    build2(flavor:options[:flavor])
+    firebase_app_distribution(
+      #1//0gyURlXKUChfsCgYIARAAGBASNwF-L9IrYxMzphO9djvnPRkmSl_BsYz9qoEK6k5nadDwTDd-ULOLwYVJx_dA5JPpOF8Q_F_LpbI
+      firebase_cli_token:"1//0gpNf1dSBGjKzCgYIARAAGBASNwF-L9IrlMxpvT_RX--bKUHpFoIxlgJxeoJnF4Z8vFir9kMSKV5qyaloVV6O-XORXErf_vIToQE",
+      app: "1:337613462775:android:a0562f974110a561b907f2",
+      groups: "group-one",
+      release_notes: release_notes ,
+      android_artifact_type: "APK",
+      apk_path: apk_path,
+    )
   end
 end
