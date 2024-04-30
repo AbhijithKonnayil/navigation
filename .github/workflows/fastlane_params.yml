@@ -29,6 +29,6 @@ jobs:
       - uses: actions/checkout@v2
       - run: |
           cd  android
-          fastlane beta2 tag:${{ github.event.inputs.logLevel }}
+          fastlane beta3 tag:${{ github.event.inputs.logLevel }}
         #env:
         #  MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
