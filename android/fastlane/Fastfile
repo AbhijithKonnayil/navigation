@@ -119,4 +119,53 @@ platform :android do
       apk_path: apk_path,
     )
   end
+
+  desc "beta4"
+  lane :beta4  do  |options|
+    flavor = options[:flavor]
+    type = "release"
+    release_notes_body = options[:release_notes]
+    apk_file_path= getApkFilePath(flavor,type)
+    release_notes = getReleaseNotes(flavor,type,release_notes_body)
+    print release_notes
+  end
+
+  desc "Publish App to Firebase"
+  lane :publishBuild do |options|
+    #set Variables
+    flavor = options[:flavor]
+    type = options[:type]
+    release_notes_body = options[:release_notes]
+    apk_file_path= getApkFilePath(flavor,type)
+    release_notes = getReleaseNotes(flavor,type,release_notes_body)
+    #End of variables
+    increment_version_firebase
+    build2(flavor:flavor)
+    firebase_app_distribution(
+      #1//0gyURlXKUChfsCgYIARAAGBASNwF-L9IrYxMzphO9djvnPRkmSl_BsYz9qoEK6k5nadDwTDd-ULOLwYVJx_dA5JPpOF8Q_F_LpbI
+      firebase_cli_token:"1//0gpNf1dSBGjKzCgYIARAAGBASNwF-L9IrlMxpvT_RX--bKUHpFoIxlgJxeoJnF4Z8vFir9kMSKV5qyaloVV6O-XORXErf_vIToQE",
+      app: "1:337613462775:android:a0562f974110a561b907f2",
+      groups: "group-one",
+      release_notes: release_notes ,
+      android_artifact_type: "APK",
+      apk_path: apk_file_path,
+    )
+  end
+
+  def splitFlavor(flavor)
+    matches = flavor.split /(?=[A-Z])/
+  	country=matches[1].downcase
+    environment=matches[0]
+    return [country,environment]
+  end
+
+  def getApkFilePath(flavor,type)
+    country, environment = splitFlavor(flavor)
+    return "../build/app/outputs/apk/#{flavor}/#{type}/app-#{environment}-#{country}-#{type}.apk"
+  end
+
+  def getReleaseNotes(flavor,type,release_notes_body)
+    return "Flavor : #{flavor} | Type : #{type}\n#{release_notes_body}"
+  end
 end
+

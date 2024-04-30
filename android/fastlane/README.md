@@ -103,6 +103,22 @@ Submit a new Beta Build to Firebase App Distribution
 
 beta 3
 
+### android beta4
+
+```sh
+[bundle exec] fastlane android beta4
+```
+
+beta4
+
+### android publishBuild
+
+```sh
+[bundle exec] fastlane android publishBuild
+```
+
+Publish App to Firebase
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
