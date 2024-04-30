@@ -56,8 +56,9 @@ platform :android do
 
   desc "Build"
   lane :build do |options|
-    print flavor
-    print  options[:flavor]
+    print "flavor\n"
+    flavor = options[:flavor]
+    print  flavor
     Dir.chdir '../..' do
       sh("flutter","build","apk","--flavor",flavor,"-t" ,"lib/mains/main_global_prod.dart")
     end
