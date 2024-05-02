@@ -162,7 +162,7 @@ platform :android do
 
   def getApkFilePath(flavor,type)
     country, environment = splitFlavor(flavor)
-    return  "../build/app/outputs/flutter-apk/app-#{environment}#{country}-release.apk"
+    return  "../build/app/outputs/flutter-apk/app-#{environment}#{country}-#{type}.apk"
     #return "../build/app/outputs/apk/#{flavor}/#{type}/app-#{environment}-#{country}-#{type}.apk"
   end
 
