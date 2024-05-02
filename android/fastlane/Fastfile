@@ -65,9 +65,10 @@ platform :android do
   lane :build2 do |options|
     print "flavor\n"
     flavor = options[:flavor]
+    type=options[:type]
     print  flavor
     Dir.chdir '../..' do
-      sh("flutter","build","apk","--flavor",flavor,"-t" ,"lib/mains/main_global_prod.dart")
+      sh("flutter","build","apk","--flavor",flavor,"-t" ,"lib/mains/main_global_prod.dart","--#{type}")
     end
   end
 
@@ -104,7 +105,7 @@ platform :android do
     matches = flavor.split /(?=[A-Z])/
   	country=matches[1].downcase
     environment=matches[0]
-    apk_path = "../build/app/outputs/apk/#{flavor}/release/app-#{environment}-#{country}-release.apk"
+    apk_path = "../build/app/outputs/flutter-apk/app-#{environment}#{country}-release.apk"
     release_notes = options[:release_notes]
     puts release_notes
     increment_version_firebase
@@ -140,7 +141,7 @@ platform :android do
     release_notes = getReleaseNotes(flavor,type,release_notes_body)
     #End of variables
     increment_version_firebase
-    build2(flavor:flavor)
+    build2(flavor:flavor,type:type)
     firebase_app_distribution(
       #1//0gyURlXKUChfsCgYIARAAGBASNwF-L9IrYxMzphO9djvnPRkmSl_BsYz9qoEK6k5nadDwTDd-ULOLwYVJx_dA5JPpOF8Q_F_LpbI
       firebase_cli_token:"1//0gpNf1dSBGjKzCgYIARAAGBASNwF-L9IrlMxpvT_RX--bKUHpFoIxlgJxeoJnF4Z8vFir9kMSKV5qyaloVV6O-XORXErf_vIToQE",
@@ -161,7 +162,8 @@ platform :android do
 
   def getApkFilePath(flavor,type)
     country, environment = splitFlavor(flavor)
-    return "../build/app/outputs/apk/#{flavor}/#{type}/app-#{environment}-#{country}-#{type}.apk"
+    return  "../build/app/outputs/flutter-apk/app-#{environment}#{country}-release.apk"
+    #return "../build/app/outputs/apk/#{flavor}/#{type}/app-#{environment}-#{country}-#{type}.apk"
   end
 
   def getReleaseNotes(flavor,type,release_notes_body)
