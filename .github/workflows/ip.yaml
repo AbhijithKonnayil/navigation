@@ -1,0 +1,33 @@
+name: ip
+on:
+  workflow_dispatch:
+    inputs:
+      flavor:
+        description: 'Flavor'     
+        required: true
+        default: 'devGlobal'
+        type: choice
+        options:
+          - prodGlobal
+          - stgGlobal
+          - devGlobal
+      type:
+        description: 'Build Type - release/debug'     
+        required: true
+        default: 'debug'
+        type: choice
+        options:
+          - debug
+          - release
+      release_notes:
+        description: 'Release Notes'  
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - run: |
+          echo "IP"
+          dig -4 TXT +short o-o.myaddr.l.google.com @ns1.google.com
+          echo "---"
+        #env:
+        #  MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
