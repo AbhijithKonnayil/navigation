@@ -29,6 +29,7 @@ jobs:
           echo "IP"
           dig -4 TXT +short o-o.myaddr.l.google.com @ns1.google.com
           pwd
+          ls
           echo "---"
         #env:
         #  MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
