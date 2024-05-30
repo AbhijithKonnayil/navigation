@@ -66,9 +66,16 @@ platform :android do
     print "flavor\n"
     flavor = options[:flavor]
     type=options[:type]
+    version=options[:version_name ]
+    buildNumber="30"
     print  flavor
+    version_agrs_sh=""
+    if(version!=nil)
+      version_agrs_sh="--build-name=#{version}"
+    end
+    puts version_agrs_sh
     Dir.chdir '../..' do
-      sh("flutter","build","apk","--flavor",flavor,"-t" ,"lib/mains/main_global_prod.dart","--#{type}")
+      sh("flutter","build","apk","--flavor",flavor,"-t" ,"lib/mains/main_global_prod.dart","--#{type}",version_agrs_sh)
     end
   end
 
@@ -89,7 +96,8 @@ platform :android do
     print Dir.pwd
     firebase_app_distribution(
       #1//0gyURlXKUChfsCgYIARAAGBASNwF-L9IrYxMzphO9djvnPRkmSl_BsYz9qoEK6k5nadDwTDd-ULOLwYVJx_dA5JPpOF8Q_F_LpbI
-      firebase_cli_token:"1//0gpNf1dSBGjKzCgYIARAAGBASNwF-L9IrlMxpvT_RX--bKUHpFoIxlgJxeoJnF4Z8vFir9kMSKV5qyaloVV6O-XORXErf_vIToQE",
+      #firebase_cli_token:"1//0gpNf1dSBGjKzCgYIARAAGBASNwF-L9IrlMxpvT_RX--bKUHpFoIxlgJxeoJnF4Z8vFir9kMSKV5qyaloVV6O-XORXErf_vIToQE",
+
       app: "1:337613462775:android:a0562f974110a561b907f2",
       groups: "group-one",
       release_notes: "Lots of new avatars to try out!",
@@ -112,7 +120,7 @@ platform :android do
     build2(flavor:options[:flavor])
     firebase_app_distribution(
       #1//0gyURlXKUChfsCgYIARAAGBASNwF-L9IrYxMzphO9djvnPRkmSl_BsYz9qoEK6k5nadDwTDd-ULOLwYVJx_dA5JPpOF8Q_F_LpbI
-      firebase_cli_token:"1//0gpNf1dSBGjKzCgYIARAAGBASNwF-L9IrlMxpvT_RX--bKUHpFoIxlgJxeoJnF4Z8vFir9kMSKV5qyaloVV6O-XORXErf_vIToQE",
+      #firebase_cli_token:"1//0gpNf1dSBGjKzCgYIARAAGBASNwF-L9IrlMxpvT_RX--bKUHpFoIxlgJxeoJnF4Z8vFir9kMSKV5qyaloVV6O-XORXErf_vIToQE",
       app: "1:337613462775:android:a0562f974110a561b907f2",
       groups: "group-one",
       release_notes: release_notes ,
@@ -139,12 +147,14 @@ platform :android do
     release_notes_body = options[:release_notes]
     apk_file_path= getApkFilePath(flavor,type)
     release_notes = getReleaseNotes(flavor,type,release_notes_body)
+    version_name=options[:version_name ]
     #End of variables
     increment_version_firebase
-    build2(flavor:flavor,type:type)
+    build2(flavor:flavor,type:type,version_name:version_name)
     firebase_app_distribution(
       #1//0gyURlXKUChfsCgYIARAAGBASNwF-L9IrYxMzphO9djvnPRkmSl_BsYz9qoEK6k5nadDwTDd-ULOLwYVJx_dA5JPpOF8Q_F_LpbI
-      firebase_cli_token:"1//0gpNf1dSBGjKzCgYIARAAGBASNwF-L9IrlMxpvT_RX--bKUHpFoIxlgJxeoJnF4Z8vFir9kMSKV5qyaloVV6O-XORXErf_vIToQE",
+      #firebase_cli_token:"1//0gpNf1dSBGjKzCgYIARAAGBASNwF-L9IrlMxpvT_RX--bKUHpFoIxlgJxeoJnF4Z8vFir9kMSKV5qyaloVV6O-XORXErf_vIToQE",
+      #service_credentials_file:"/Users/d2c-abhijith.k/projects/navigation/service.json",
       app: "1:337613462775:android:a0562f974110a561b907f2",
       groups: "group-one",
       release_notes: release_notes ,

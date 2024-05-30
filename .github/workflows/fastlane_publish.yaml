@@ -20,7 +20,9 @@ on:
           - debug
           - release
       release_notes:
-        description: 'Release Notes'  
+        description: 'Release Notes'
+      version_name:
+        description: 'Version Name  [major.minor.patch]'
 jobs:
   build:
     runs-on: macos-latest
@@ -43,6 +45,6 @@ jobs:
       - run: |
           cd  android
           echo "fastlane publishBuild flavor:${{ github.event.inputs.flavor }} release_notes:${{ github.event.inputs.release_notes }} type:${{ github.event.inputs.type }}"
-          fastlane publishBuild flavor:${{ github.event.inputs.flavor }} release_notes:"${{ github.event.inputs.release_notes }}" type:${{ github.event.inputs.type }}
+          fastlane publishBuild flavor:${{ github.event.inputs.flavor }} release_notes:"${{ github.event.inputs.release_notes }}" type:${{ github.event.inputs.type }} version_name:${{ github.event.inputs.version_name }}
         #env:
         #  MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
