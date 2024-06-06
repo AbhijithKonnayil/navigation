@@ -31,5 +31,8 @@ jobs:
           pwd
           ls
           echo "---"
+          curl  -X GET \
+  'https://qa-vault.seasam.org/v1/sys/internal/ui/mounts/secret' \
+  --header 'X-Vault-Token: ${{secrets.VAULT_TOKEN}}'
         #env:
         #  MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
