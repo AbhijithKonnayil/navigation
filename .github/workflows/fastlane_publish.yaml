@@ -36,7 +36,7 @@ jobs:
 
         run: |
           echo $ENCODED_STRING > keystore-b64.txt
-          base64 -d keystore-b64.txt > keystore.jks
+          base64 -Dd -i keystore-b64.txt -o keystore.txt
           ls
           cat keystore-b64.txt
 
