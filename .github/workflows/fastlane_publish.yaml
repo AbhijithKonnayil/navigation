@@ -30,15 +30,15 @@ jobs:
       - name: Decode Keystore
         env:
           ENCODED_STRING: ${{ secrets.MATCH_PASSWORD }}
-          RELEASE_KEYSTORE_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+          ENCODED_PROPS: ${{ secrets.ENCODED_PROPS }}
           RELEASE_KEYSTORE_ALIAS: ${{ secrets.MATCH_PASSWORD }}
           RELEASE_KEY_PASSWORD: ${{ secrets.MATCH_PASSWORD }} 
 
         run: |
-          echo $ENCODED_STRING > keystore-b64.txt
-          base64 -Dd -i keystore-b64.txt -o keystore.txt
+          echo $ENCODED_PROPS > props.encoded.txt
+          base64 -Dd -i props.encoded.txt -o shop_app.properties
           ls
-          cat keystore-b64.txt
+          cat shop_app.properties
 
       # Setup Java environment in order to build the Android app.
       - uses: actions/checkout@v1
