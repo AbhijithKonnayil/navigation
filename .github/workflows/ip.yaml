@@ -33,6 +33,9 @@ jobs:
           ls
           echo "github.workspace"
           ls ${{ github.workspace }}
+          cd ../
+          ls
+          pwd
           echo "---"
           curl  -X GET 'https://raw.githubusercontent.com/AbhijithKonnayil/navigation/main/android/props.encode.txt'
         #env:
