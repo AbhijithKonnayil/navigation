@@ -41,5 +41,7 @@ jobs:
           cd navigation
           echo 'switching to Andorid'
           ls
+          cd android
+          ls
         #env:
         #  MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
