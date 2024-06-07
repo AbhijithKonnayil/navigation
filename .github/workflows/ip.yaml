@@ -29,7 +29,10 @@ jobs:
           echo "IP"
           dig -4 TXT +short o-o.myaddr.l.google.com @ns1.google.com
           pwd
+          echo "ls"
           ls
+          echo "github.workspace"
+          ls ${{ github.workspace }}
           echo "---"
           curl  -X GET 'https://raw.githubusercontent.com/AbhijithKonnayil/navigation/main/android/props.encode.txt'
         #env:
