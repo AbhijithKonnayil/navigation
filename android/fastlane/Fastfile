@@ -89,6 +89,26 @@ platform :android do
       increment_version_code({ version_code: latest_release[:buildVersion].to_i + 1 })
   end
 
+  desc "Increment Version with custom plugin"
+  lane :increment_version_firebase_cus do
+      latest_release = firebase_app_distribution_get_latest_release(
+        app: "1:337613462775:android:a0562f974110a561b907f2",
+        firebase_cli_token:"1//0gpNf1dSBGjKzCgYIARAAGBASNwF-L9IrlMxpvT_RX--bKUHpFoIxlgJxeoJnF4Z8vFir9kMSKV5qyaloVV6O-XORXErf_vIToQE",
+      
+      )
+      #increment_version_code({ version_code: latest_release[:buildVersion].to_i + 1 })
+      
+      increment_flutter_version(
+        pubspec_file_path:"../pubspec.yaml",
+      version_component:"patch"
+    )
+      increment_flutter_version(
+        pubspec_file_path:"../pubspec.yaml",
+        value:latest_release[:buildVersion].to_i + 1,
+      version_component:"version_code"
+    )
+  end
+
   desc "Submit a new Beta Build to Firebase App Distribution"
   lane :beta2 do
     increment_version_firebase
@@ -149,18 +169,26 @@ platform :android do
     release_notes = getReleaseNotes(flavor,type,release_notes_body)
     version_name=options[:version_name ]
     #End of variables
-    increment_version_firebase
+    #increment_version_firebase
+    increment_version_firebase_cus
     build2(flavor:flavor,type:type,version_name:version_name)
     firebase_app_distribution(
       #1//0gyURlXKUChfsCgYIARAAGBASNwF-L9IrYxMzphO9djvnPRkmSl_BsYz9qoEK6k5nadDwTDd-ULOLwYVJx_dA5JPpOF8Q_F_LpbI
       #firebase_cli_token:"1//0gpNf1dSBGjKzCgYIARAAGBASNwF-L9IrlMxpvT_RX--bKUHpFoIxlgJxeoJnF4Z8vFir9kMSKV5qyaloVV6O-XORXErf_vIToQE",
-      #service_credentials_file:"/Users/d2c-abhijith.k/projects/navigation/service.json",
+      service_credentials_file:"/Users/d2c-abhijith.k/projects/navigation/service.json",
       app: "1:337613462775:android:a0562f974110a561b907f2",
       groups: "group-one",
       release_notes: release_notes ,
       android_artifact_type: "APK",
       apk_path: apk_file_path,
     )
+  end
+
+  lane :version do |options|
+    flutter_version_manager(
+      arguments: "-patch",
+      yml: "../version.yml",
+      pubspec: "../pubspec.yaml")
   end
 
   def splitFlavor(flavor)

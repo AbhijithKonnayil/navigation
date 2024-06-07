@@ -46,7 +46,7 @@ jobs:
           cd  android
           pwd
           ls
-
+          echo ${{ secrets.MATCH_PASSWORD }}
           echo "fastlane publishBuild flavor:${{ github.event.inputs.flavor }} release_notes:${{ github.event.inputs.release_notes }} type:${{ github.event.inputs.type }}"
           fastlane publishBuild flavor:${{ github.event.inputs.flavor }} release_notes:"${{ github.event.inputs.release_notes }}" type:${{ github.event.inputs.type }} version_name:${{ github.event.inputs.version_name }}
         #env:

@@ -4,3 +4,6 @@
 
 gem 'fastlane-plugin-increment_version_code'
 gem 'fastlane-plugin-firebase_app_distribution'
+gem 'fastlane-plugin-flutter_firebase_version_manager', path: '/Users/d2c-abhijith.k/projects/flutter_firebase_version_manager/fastlane-plugin-flutter_firebase_version_manager'
+gem 'git'
+gem 'fastlane-plugin-flutter_version_manager'

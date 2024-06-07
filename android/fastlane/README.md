@@ -87,6 +87,14 @@ Build
 
 Increment Version
 
+### android increment_version_firebase_cus
+
+```sh
+[bundle exec] fastlane android increment_version_firebase_cus
+```
+
+Increment Version with custom plugin
+
 ### android beta2
 
 ```sh
@@ -118,6 +126,14 @@ beta4
 ```
 
 Publish App to Firebase
+
+### android version
+
+```sh
+[bundle exec] fastlane android version
+```
+
+
 
 ----
 
