@@ -32,7 +32,7 @@ jobs:
           echo "ls"
           ls
           echo "github.workspace"
-          ls ${{ github.workspace }}
+          echo ${{ github.workspace }}
           cd ../
           ls
           pwd
