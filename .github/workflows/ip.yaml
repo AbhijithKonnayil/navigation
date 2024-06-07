@@ -37,9 +37,10 @@ jobs:
           base64 -Dd -i props.encode.txt -o shop_app.properties
           base64 -Dd -i key_encode.txt -o shop_app.keystore
           ls 
-          cat shop_app.keystore
-          cat shop_app.properties
-          cd ../../navigation/android
+        #  cat shop_app.keystore
+        #  cat shop_app.properties
+          cd ../../
+          pwd
           echo 'switching to Andorid'
           ls
         #env:
