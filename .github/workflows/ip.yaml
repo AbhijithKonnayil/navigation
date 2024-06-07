@@ -38,8 +38,10 @@ jobs:
           base64 -Dd -i key_encode.txt -o shop_app.keystore
           ls 
           cd ../../
+          echo 'cd navigation' 
           cd navigation
-          echo 'switching to Andorid'
+          pwd
+          ls
           ls
           cd android
           ls
