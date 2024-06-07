@@ -46,6 +46,20 @@ android {
         main.java.srcDirs += 'src/main/kotlin'
     }
 
+   
+
+    signingConfigs {
+        release{
+
+            def (String storeFileValue, String storePasswordValue,String keyAliasValue,String keyPasswordValue) = getSigningConfigDetails("uk")
+
+            storeFile file(storeFileValue)
+            storePassword storePasswordValue
+            keyAlias keyAliasValue
+            keyPassword keyPasswordValue
+        }
+    }
+
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.example.navigation"
@@ -53,7 +67,7 @@ android {
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 19
         targetSdkVersion flutter.targetSdkVersion
-        versionCode 5
+        versionCode 31
         versionName flutterVersionName
         //setProperty("archivesBaseName", "${variant.productFlavors[0].name}")
 
@@ -63,7 +77,8 @@ android {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            //signingConfig signingConfigs.debug
+             signingConfig signingConfigs.release
         }
 
          
@@ -99,6 +114,18 @@ android {
         }
 }
 
+ def getSigningConfigDetails (String countryCode)  {
+        def keystoreProperties = new Properties()
+        def keystorePropertiesFile = rootProject.file("../../country_keys_test/$countryCode/shop_app.properties")
+        if (keystorePropertiesFile.exists()) {
+        print("App Building using proper keystore - key.properties")
+        keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+        return [keystoreProperties['storeFile'],keystoreProperties['storePassword'],keystoreProperties['keyAlias'],keystoreProperties['keyPassword']]
+        }else{
+            print("App Building using debug keystore")
+            return  [keystoreProperties['storeFile'],keystoreProperties['storePassword'],keystoreProperties['keyAlias'],keystoreProperties['keyPassword']]
+        }
+    }
 flutter {
     source '../..'
 }
