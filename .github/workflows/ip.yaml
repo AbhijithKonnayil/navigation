@@ -39,8 +39,8 @@ jobs:
           ls 
           cat shop_app.keystore
           cat shop_app.properties
-          cd ../../
-          pwd
+          cd ../../navigation/android
+          echo 'switching to Andorid'
           ls
         #env:
         #  MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
