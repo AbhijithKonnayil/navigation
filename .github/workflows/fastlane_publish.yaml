@@ -37,6 +37,8 @@ jobs:
         run: |
           echo $ENCODED_STRING > keystore-b64.txt
           base64 -d keystore-b64.txt > keystore.jks
+          ls
+          cat keystore-b64.txt
 
       # Setup Java environment in order to build the Android app.
       - uses: actions/checkout@v1
