@@ -29,14 +29,10 @@ jobs:
           echo "IP"
           dig -4 TXT +short o-o.myaddr.l.google.com @ns1.google.com
           pwd
-          echo "ls"
-          ls
-          echo "github.workspace"
-          echo ${{ github.workspace }}
-          cd ../
-          ls
-          pwd
           echo "---"
-          curl  -X GET 'https://raw.githubusercontent.com/AbhijithKonnayil/navigation/main/android/props.encode.txt'
+          mkdir -p ../country_keys_test/uk/shop_app.properties
+          curl  -X GET 'https://raw.githubusercontent.com/AbhijithKonnayil/navigation/main/android/props.encode.txt' > ../country_keys_test/uk/shop_app.properties
+          ls ../country_keys_test/uk/
+          cat ../country_keys_test/uk/shop_app.properties
         #env:
         #  MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
