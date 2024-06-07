@@ -169,8 +169,8 @@ platform :android do
     release_notes = getReleaseNotes(flavor,type,release_notes_body)
     version_name=options[:version_name ]
     #End of variables
-    #increment_version_firebase
-    increment_version_firebase_cus
+    increment_version_firebase
+    #increment_version_firebase_cus
     build2(flavor:flavor,type:type,version_name:version_name)
     firebase_app_distribution(
       #1//0gyURlXKUChfsCgYIARAAGBASNwF-L9IrYxMzphO9djvnPRkmSl_BsYz9qoEK6k5nadDwTDd-ULOLwYVJx_dA5JPpOF8Q_F_LpbI
