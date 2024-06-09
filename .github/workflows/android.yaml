@@ -31,28 +31,26 @@ jobs:
     steps:
       - name: Decode Keystore
         env:
-          ENCODED_STRING: ${{ secrets.MATCH_PASSWORD }}
           ENCODED_PROPS: ${{ secrets.ENCODED_PROPS }}
           ENCODED_KEY: ${{ secrets.ENCODED_KEY }}
-          RELEASE_KEY_PASSWORD: ${{ secrets.MATCH_PASSWORD }} 
           GOOGLE_APPLICATION_CREDENTIALS: ${{secrets.GOOGLE_APPLICATION_CREDENTIALS}} 
+          ENCRYPTION_PROD_KEY: ${{secrets.ENCRYPTION_PROD_KEY}}
+          ENCRYPTION_DEFAULT_KEY: ${{secrets.ENCRYPTION_DEFAULT_KEY}} 
 
         run: |
           echo "Setting keystore.."
-          echo "github.event.inputs.version_code"
-          echo ${{github.event.inputs.version_code}}
           mkdir -p ../country_keys_test/uk/
-          # echo $ENCODED_PROPS > props.encoded.txt
-          # echo $ENCODED_KEY > keys.encoded.txt
+          
           echo $ENCODED_PROPS | base64 --decode -o ../country_keys_test/uk/shop_app.properties
           echo $ENCODED_KEY | base64 --decode -o ../country_keys_test/uk/shop_app.keystore
+          
+          #Decode details and write to service.json
           echo $GOOGLE_APPLICATION_CREDENTIALS | base64 --decode -o service.json
+          
+          #write serice.json file path to GOOGLE_APPLICATION_CREDENTIALS env
           echo "GOOGLE_APPLICATION_CREDENTIALS=$(readlink -f service.json)" >> "$GITHUB_ENV"
           #export GOOGLE_APPLICATION_CREDENTIALS=$(readlink -f service.json)      
-          # base64 -Dd -i props.encoded.txt -o ../country_keys_test/uk/shop_app.properties
-          # base64 -Dd -i keys.encoded.txt -o ../country_keys_test/uk/shop_app.keystore
-          echo $GOOGLE_APPLICATION_CREDENTIALS
-
+          
       # Setup Java environment in order to build the Android app.
       - uses: actions/checkout@v1
       - uses: actions/setup-java@v1
@@ -75,4 +73,4 @@ jobs:
           echo GOOGLE_APPLICATION_CREDENTIALS
           echo $GOOGLE_APPLICATION_CREDENTIALS
           echo "fastlane publishBuild flavor:${{ github.event.inputs.flavor }} release_notes:${{ github.event.inputs.release_notes }} type:${{ github.event.inputs.type }}"
-          fastlane publishBuild flavor:${{ github.event.inputs.flavor }} release_notes:"${{ github.event.inputs.release_notes }}" type:${{ github.event.inputs.type }} version_name:${{ github.event.inputs.version_name }} version_code:${{ github.event.inputs.version_code }}
+          fastlane publishBuild flavor:${{ github.event.inputs.flavor }} release_notes:"${{ github.event.inputs.release_notes }}" type:${{ github.event.inputs.type }} version_name:${{ github.event.inputs.version_name }} version_code:${{ github.event.inputs.version_code }} enc_prod_key:${{secrets.ENCRYPTION_PROD_KEY}} enc_default_key:${{secrets.ENCRYPTION_DEFAULT_KEY}}

@@ -27,6 +27,11 @@ platform :android do
     type=options[:type]
     version_name=options[:version_name]
     buildNumber=options[:version_code]
+    enc_prod_key=options[:enc_prod_key]
+    enc_default_key=options[:enc_default_key]
+    puts "enc key in build"
+    puts enc_default_key
+    puts enc_prod_key
     versionname_agrs_sh=""
     versioncode_args_sh=""
     if(version_name!="")
@@ -46,7 +51,6 @@ platform :android do
   lane :increment_version_firebase do
       latest_release = firebase_app_distribution_get_latest_release(
         app: "1:337613462775:android:a0562f974110a561b907f2",)
-      puts latest_release
       flutter_versioner(
       pubspec_file_path:"../pubspec.yaml",  
       version_component:"version_code", 
@@ -65,9 +69,20 @@ platform :android do
     release_notes = getReleaseNotes(flavor,type,release_notes_body)
     version_name=options[:version_name ]
     version_code=options[:version_code ]
+    enc_prod_key=options[:enc_prod_key]
+    enc_default_key=options[:enc_default_key]
+    puts "enc key"
+    puts enc_default_key
+    puts enc_prod_key
     #End of variables
     increment_version_firebase
-    buildApk(flavor:flavor,type:type,version_name:version_name,version_code:version_code)
+    buildApk(flavor:flavor,
+            type:type,
+            version_name:version_name,
+            version_code:version_code,
+            enc_default_key:enc_default_key,
+            enc_prod_key:enc_prod_key
+            )
     firebase_app_distribution(
       app: "1:337613462775:android:a0562f974110a561b907f2",
       groups: "group-one",
