@@ -1,4 +1,4 @@
-name: Shop-App-Android-Acrion
+name: Shop-App-Android-Publish
 on:
   workflow_dispatch:
     inputs:
@@ -35,7 +35,7 @@ jobs:
           ENCODED_PROPS: ${{ secrets.ENCODED_PROPS }}
           ENCODED_KEY: ${{ secrets.ENCODED_KEY }}
           RELEASE_KEY_PASSWORD: ${{ secrets.MATCH_PASSWORD }} 
-          GOOGLE_APPLICATION_CREDENTIALS: ${{secrets.GOOGLE_APPLICATION_CREDENTIALS}}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{secrets.GOOGLE_APPLICATION_CREDENTIALS}} 
 
         run: |
           echo "Setting keystore.."
@@ -45,7 +45,8 @@ jobs:
           echo $ENCODED_PROPS | base64 --decode -o ../country_keys_test/uk/shop_app.properties
           echo $ENCODED_KEY | base64 --decode -o ../country_keys_test/uk/shop_app.keystore
           echo $GOOGLE_APPLICATION_CREDENTIALS | base64 --decode -o service.json
-          export GOOGLE_APPLICATION_CREDENTIALS=$(readlink -f service.json)      
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$(readlink -f service.json)" >> "$GITHUB_ENV"
+          #export GOOGLE_APPLICATION_CREDENTIALS=$(readlink -f service.json)      
           # base64 -Dd -i props.encoded.txt -o ../country_keys_test/uk/shop_app.properties
           # base64 -Dd -i keys.encoded.txt -o ../country_keys_test/uk/shop_app.keystore
           echo $GOOGLE_APPLICATION_CREDENTIALS
