@@ -73,4 +73,4 @@ jobs:
           echo GOOGLE_APPLICATION_CREDENTIALS
           echo $GOOGLE_APPLICATION_CREDENTIALS
           echo "fastlane publishBuild flavor:${{ github.event.inputs.flavor }} release_notes:${{ github.event.inputs.release_notes }} type:${{ github.event.inputs.type }}"
-          fastlane publishBuild flavor:${{ github.event.inputs.flavor }} release_notes:"${{ github.event.inputs.release_notes }}" type:${{ github.event.inputs.type }} version_name:${{ github.event.inputs.version_name }} version_code:${{ github.event.inputs.version_code }} enc_prod_key:${{secrets.ENCRYPTION_PROD_KEY}} enc_default_key:${{secrets.ENCRYPTION_DEFAULT_KEY}}
+          fastlane publishBuild flavor:${{ github.event.inputs.flavor }} release_notes:"${{ github.event.inputs.release_notes }}" type:${{ github.event.inputs.type }} version_name:${{ github.event.inputs.version_name }} version_code:${{ github.event.inputs.version_code }} enc_prod_key:"${{secrets.ENCRYPTION_PROD_KEY}}" enc_default_key:"${{secrets.ENCRYPTION_DEFAULT_KEY}}"
