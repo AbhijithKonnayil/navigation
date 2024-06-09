@@ -1,0 +1,68 @@
+name: Shop-App-Android-Acrion
+on:
+  workflow_dispatch:
+    inputs:
+      flavor:
+        description: 'Flavor'     
+        required: true
+        default: 'devGlobal'
+        type: choice
+        options:
+          - prodGlobal
+          - stgGlobal
+          - devGlobal
+      type:
+        description: 'Build Type - release/debug'     
+        required: true
+        default: 'debug'
+        type: choice
+        options:
+          - debug
+          - release
+      release_notes:
+        description: 'Release Notes'
+      version_name:
+        description: 'Version Name (major.minor.patch) [Fill this only if you need a specific version name] '
+      version_code:
+        description: 'Version Code [Fill this only if you need a specific build number, other wise latest build number for firebase will used]'
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Decode Keystore
+        env:
+          ENCODED_STRING: ${{ secrets.MATCH_PASSWORD }}
+          ENCODED_PROPS: ${{ secrets.ENCODED_PROPS }}
+          ENCODED_KEY: ${{ secrets.ENCODED_KEY }}
+          RELEASE_KEY_PASSWORD: ${{ secrets.MATCH_PASSWORD }} 
+
+        run: |
+          echo "Setting keystore.."
+          echo $ENCODED_PROPS > props.encoded.txt
+          echo $ENCODED_KEY > keys.encoded.txt
+          mkdir -p ../country_keys_test/uk/
+          base64 -Dd -i props.encoded.txt -o ../country_keys_test/uk/shop_app.properties
+          base64 -Dd -i keys.encoded.txt -o ../country_keys_test/uk/shop_app.keystore
+
+      # Setup Java environment in order to build the Android app.
+      - uses: actions/checkout@v1
+      - uses: actions/setup-java@v1
+        with:
+          java-version: '12.x'
+    
+      # Setup the flutter environment.
+      - uses: subosito/flutter-action@v1
+        with:
+          channel: 'beta' # 'dev', 'alpha', default to: 'stable'
+          # flutter-version: '1.12.x' # you can also specify exact version of flutter
+    
+      # Get flutter dependencies.
+      - run: flutter pub get
+      - uses: actions/checkout@v2
+      - name: Executing Fastlane 
+        run: |
+          cd  android
+          echo "fastlane publishBuild flavor:${{ github.event.inputs.flavor }} release_notes:${{ github.event.inputs.release_notes }} type:${{ github.event.inputs.type }}"
+          fastlane publishBuild flavor:${{ github.event.inputs.flavor }} release_notes:"${{ github.event.inputs.release_notes }}" type:${{ github.event.inputs.type }} version_name:${{ github.event.inputs.version_name }}
+        #env:
+        #  MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}

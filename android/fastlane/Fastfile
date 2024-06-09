@@ -16,66 +16,29 @@
 default_platform(:android)
 
 platform :android do
-  desc "Runs all the tests"
-  lane :test1 do
-    gradle(task: "test")
-  end
   lane :test do
     # Run your Flutter tests
     sh("flutter test")
   end
 
-  desc "Increment Version"
-    lane :increment_version do
-        latest_release = firebase_app_distribution_get_latest_release(
-          app: "1:337613462775:android:a0562f974110a561b907f2"
-        )
-        increment_version_code({ version_code: latest_release[:buildVersion].to_i + 1 })
-  end
-
-  desc "Submit a new Beta Build to Crashlytics Beta"
-  lane :beta do
-    gradle(task: "clean assembleRelease")
-    crashlytics
-  
-    # sh "your_script.sh"
-    # You can also use other beta testing services here
-  end
-
-  desc "Deploy a new version to the Google Play"
-  lane :deploy do
-    gradle(task: "clean assembleRelease")
-    upload_to_play_store
-  end
-
-  lane :beta1 do
-      increment_version_code(
-          gradle_file_path: "./app/build.gradle",
-      )
-  end
-
   desc "Build"
-  lane :build do
-    Dir.chdir '../..' do
-      sh("flutter","build","apk","--flavor","prodGlobal","-t" ,"lib/mains/main_global_prod.dart")
-    end
-  end
-
-  desc "Build"
-  lane :build2 do |options|
-    print "flavor\n"
+  lane :buildApk do |options|
     flavor = options[:flavor]
     type=options[:type]
-    version=options[:version_name ]
-    buildNumber="30"
-    print  flavor
-    version_agrs_sh=""
-    if(version!=nil)
-      version_agrs_sh="--build-name=#{version}"
+    version_name=options[:version_name]
+    buildNumber=options[:version_code]
+    versionname_agrs_sh=""
+    versioncode_args_sh=""
+    if(version_name!=nil)
+      versionname_agrs_sh="--build-name=#{version_name}"
     end
-    puts version_agrs_sh
+    if(buildNumber!=nil)
+      versioncode_args_sh= "--build-number=#{buildNumber}"
+    end
+    puts versionname_agrs_sh
+    puts versioncode_args_sh
     Dir.chdir '../..' do
-      sh("flutter","build","apk","--flavor",flavor,"-t" ,"lib/mains/main_global_prod.dart","--#{type}",version_agrs_sh)
+      sh("flutter","build","apk","--flavor",flavor,"-t" ,"lib/mains/main_global_prod.dart","--#{type}",versionname_agrs_sh,versioncode_args_sh)
     end
   end
 
@@ -83,81 +46,16 @@ platform :android do
   lane :increment_version_firebase do
       latest_release = firebase_app_distribution_get_latest_release(
         app: "1:337613462775:android:a0562f974110a561b907f2",
-        firebase_cli_token:"1//0gpNf1dSBGjKzCgYIARAAGBASNwF-L9IrlMxpvT_RX--bKUHpFoIxlgJxeoJnF4Z8vFir9kMSKV5qyaloVV6O-XORXErf_vIToQE",
-      
+        service_credentials_file:"/Users/d2c-abhijith.k/projects/navigation/service.json",
       )
-      increment_version_code({ version_code: latest_release[:buildVersion].to_i + 1 })
-  end
-
-  desc "Increment Version with custom plugin"
-  lane :increment_version_firebase_cus do
-      latest_release = firebase_app_distribution_get_latest_release(
-        app: "1:337613462775:android:a0562f974110a561b907f2",
-        firebase_cli_token:"1//0gpNf1dSBGjKzCgYIARAAGBASNwF-L9IrlMxpvT_RX--bKUHpFoIxlgJxeoJnF4Z8vFir9kMSKV5qyaloVV6O-XORXErf_vIToQE",
-      
+      puts latest_release
+      flutter_versioner(
+      pubspec_file_path:"../pubspec.yaml",  
+      version_component:"version_code", 
+      value:latest_release[:buildVersion].to_i + 1 
       )
-      #increment_version_code({ version_code: latest_release[:buildVersion].to_i + 1 })
-      
-      increment_flutter_version(
-        pubspec_file_path:"../pubspec.yaml",
-      version_component:"patch"
-    )
-      increment_flutter_version(
-        pubspec_file_path:"../pubspec.yaml",
-        value:latest_release[:buildVersion].to_i + 1,
-      version_component:"version_code"
-    )
   end
 
-  desc "Submit a new Beta Build to Firebase App Distribution"
-  lane :beta2 do
-    increment_version_firebase
-    build
-    print Dir.pwd
-    firebase_app_distribution(
-      #1//0gyURlXKUChfsCgYIARAAGBASNwF-L9IrYxMzphO9djvnPRkmSl_BsYz9qoEK6k5nadDwTDd-ULOLwYVJx_dA5JPpOF8Q_F_LpbI
-      #firebase_cli_token:"1//0gpNf1dSBGjKzCgYIARAAGBASNwF-L9IrlMxpvT_RX--bKUHpFoIxlgJxeoJnF4Z8vFir9kMSKV5qyaloVV6O-XORXErf_vIToQE",
-
-      app: "1:337613462775:android:a0562f974110a561b907f2",
-      groups: "group-one",
-      release_notes: "Lots of new avatars to try out!",
-      android_artifact_type: "APK",
-      apk_path: "../build/app/outputs/apk/prodGlobal/release/app-prod-global-release.apk",
-    )
-  end
-
-  desc "beta 3"
-  lane :beta3 do |options|
-    print  "Beta 3"
-    flavor = options[:flavor]
-    matches = flavor.split /(?=[A-Z])/
-  	country=matches[1].downcase
-    environment=matches[0]
-    apk_path = "../build/app/outputs/flutter-apk/app-#{environment}#{country}-release.apk"
-    release_notes = options[:release_notes]
-    puts release_notes
-    increment_version_firebase
-    build2(flavor:options[:flavor])
-    firebase_app_distribution(
-      #1//0gyURlXKUChfsCgYIARAAGBASNwF-L9IrYxMzphO9djvnPRkmSl_BsYz9qoEK6k5nadDwTDd-ULOLwYVJx_dA5JPpOF8Q_F_LpbI
-      #firebase_cli_token:"1//0gpNf1dSBGjKzCgYIARAAGBASNwF-L9IrlMxpvT_RX--bKUHpFoIxlgJxeoJnF4Z8vFir9kMSKV5qyaloVV6O-XORXErf_vIToQE",
-      app: "1:337613462775:android:a0562f974110a561b907f2",
-      groups: "group-one",
-      release_notes: release_notes ,
-      android_artifact_type: "APK",
-      apk_path: apk_path,
-    )
-  end
-
-  desc "beta4"
-  lane :beta4  do  |options|
-    flavor = options[:flavor]
-    type = "release"
-    release_notes_body = options[:release_notes]
-    apk_file_path= getApkFilePath(flavor,type)
-    release_notes = getReleaseNotes(flavor,type,release_notes_body)
-    print release_notes
-  end
 
   desc "Publish App to Firebase"
   lane :publishBuild do |options|
@@ -170,11 +68,8 @@ platform :android do
     version_name=options[:version_name ]
     #End of variables
     increment_version_firebase
-    #increment_version_firebase_cus
-    build2(flavor:flavor,type:type,version_name:version_name)
+    buildApk(flavor:flavor,type:type,version_name:version_name)
     firebase_app_distribution(
-      #1//0gyURlXKUChfsCgYIARAAGBASNwF-L9IrYxMzphO9djvnPRkmSl_BsYz9qoEK6k5nadDwTDd-ULOLwYVJx_dA5JPpOF8Q_F_LpbI
-      #firebase_cli_token:"1//0gpNf1dSBGjKzCgYIARAAGBASNwF-L9IrlMxpvT_RX--bKUHpFoIxlgJxeoJnF4Z8vFir9kMSKV5qyaloVV6O-XORXErf_vIToQE",
       service_credentials_file:"/Users/d2c-abhijith.k/projects/navigation/service.json",
       app: "1:337613462775:android:a0562f974110a561b907f2",
       groups: "group-one",
@@ -182,13 +77,6 @@ platform :android do
       android_artifact_type: "APK",
       apk_path: apk_file_path,
     )
-  end
-
-  lane :version do |options|
-    flutter_version_manager(
-      arguments: "-patch",
-      yml: "../version.yml",
-      pubspec: "../pubspec.yaml")
   end
 
   def splitFlavor(flavor)
