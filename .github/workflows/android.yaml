@@ -48,6 +48,7 @@ jobs:
           export GOOGLE_APPLICATION_CREDENTIALS=$(readlink -f service.json)      
           # base64 -Dd -i props.encoded.txt -o ../country_keys_test/uk/shop_app.properties
           # base64 -Dd -i keys.encoded.txt -o ../country_keys_test/uk/shop_app.keystore
+          echo $GOOGLE_APPLICATION_CREDENTIALS
 
       # Setup Java environment in order to build the Android app.
       - uses: actions/checkout@v1
@@ -68,5 +69,7 @@ jobs:
       - name: Executing Fastlane 
         run: |
           cd  android
+          echo GOOGLE_APPLICATION_CREDENTIALS
+          echo $GOOGLE_APPLICATION_CREDENTIALS
           echo "fastlane publishBuild flavor:${{ github.event.inputs.flavor }} release_notes:${{ github.event.inputs.release_notes }} type:${{ github.event.inputs.type }}"
           fastlane publishBuild flavor:${{ github.event.inputs.flavor }} release_notes:"${{ github.event.inputs.release_notes }}" type:${{ github.event.inputs.type }} version_name:${{ github.event.inputs.version_name }} version_code:${{ github.event.inputs.version_code }}
