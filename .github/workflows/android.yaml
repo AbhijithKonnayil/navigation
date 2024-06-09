@@ -39,6 +39,8 @@ jobs:
 
         run: |
           echo "Setting keystore.."
+          echo "github.event.inputs.version_code"
+          echo ${{github.event.inputs.version_code}}
           mkdir -p ../country_keys_test/uk/
           # echo $ENCODED_PROPS > props.encoded.txt
           # echo $ENCODED_KEY > keys.encoded.txt
