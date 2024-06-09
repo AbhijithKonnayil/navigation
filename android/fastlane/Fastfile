@@ -29,10 +29,10 @@ platform :android do
     buildNumber=options[:version_code]
     versionname_agrs_sh=""
     versioncode_args_sh=""
-    if(version_name!=nil)
+    if(version_name!="")
       versionname_agrs_sh="--build-name=#{version_name}"
     end
-    if(buildNumber!=nil)
+    if(buildNumber!="")
       versioncode_args_sh= "--build-number=#{buildNumber}"
     end
     puts versionname_agrs_sh
