@@ -68,8 +68,8 @@ jobs:
       - uses: actions/checkout@v2
       
       - run: |
-        pwd
-        ls /Users/runner/Library/Android/sdk/
+          pwd
+          ls /Users/runner/Library/Android/sdk/
       # SDK Manager
       #- name: Accept Android SDK licenses
       #  run: sdkmanager --licenses
