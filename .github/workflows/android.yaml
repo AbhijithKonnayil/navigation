@@ -67,13 +67,15 @@ jobs:
       - run: flutter pub get
       - uses: actions/checkout@v2
       
-      
+      - run: |
+        pwd
+        ls /Users/runner/Library/Android/sdk/
       # SDK Manager
       #- name: Accept Android SDK licenses
       #  run: sdkmanager --licenses
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      #- name: Setup Android SDK
+      #  uses: android-actions/setup-android@v3
       # # SDK Manager
       # - name: Install Android SDK components
       #   run: sdkmanager "platform;android-30" "build-tools;30.0.3"
