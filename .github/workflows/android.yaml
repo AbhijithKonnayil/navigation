@@ -66,11 +66,27 @@ jobs:
       # Get flutter dependencies.
       - run: flutter pub get
       - uses: actions/checkout@v2
+      
+      # SDK Manager
+      - name: Accept Android SDK licenses
+      - run: yes | sdkmanager --licenses
+
+      # SDK Manager
+      - name: Install Android SDK components
+      - run: sdkmanager "platform;android-30" "build-tools;30.0.3"
+
+      # Add SDK to Path
+      - name: Add SDK to Path
+      - run: |
+          echo "$ANDROID_HOME/platform-tools" >> $GITHUB_PATH
+          echo "$ANDROID_HOME/build-tools/30.0.3" >>  $GITHUB_PATH
+
+      - name: AAPT
+      - run: aapt version
       #fastlane
       - name: Executing Fastlane 
         run: |
           cd  android
-          aapt
           echo GOOGLE_APPLICATION_CREDENTIALS
           echo $GOOGLE_APPLICATION_CREDENTIALS
           echo "fastlane publishBuild flavor:${{ github.event.inputs.flavor }} release_notes:${{ github.event.inputs.release_notes }} type:${{ github.event.inputs.type }}"
