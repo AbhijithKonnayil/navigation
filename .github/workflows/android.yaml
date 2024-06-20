@@ -69,8 +69,8 @@ jobs:
       
       
       # SDK Manager
-      - name: Accept Android SDK licenses
-        run: sdkmanager --licenses
+      #- name: Accept Android SDK licenses
+      #  run: sdkmanager --licenses
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
