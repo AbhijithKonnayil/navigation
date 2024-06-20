@@ -87,7 +87,7 @@ jobs:
       #     echo "$ANDROID_HOME/build-tools/30.0.3" >>  $GITHUB_PATH
 
       - name: AAPT
-        run: aapt version
+        run: $ANDROID_HOME/build-tools/aapt version
       #fastlane
       - name: Executing Fastlane 
         run: |
