@@ -26,6 +26,10 @@ jobs:
     runs-on: macos-latest
     steps:
       - run: |
+          echo  "ANDROID HOME"
+          echo $ANDROID_HOME
+          ls $ANDROID_HOME/build-tools
+      - run: |
           echo "github.ref"
           echo ${{github.ref}}
           echo "github.event.ref"
