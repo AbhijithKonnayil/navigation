@@ -41,8 +41,8 @@ jobs:
           echo "Setting keystore.."
           mkdir -p ../country_keys_test/uk/
           
-          echo $ENCODED_PROPS | base64 --decode -o ../country_keys_test/uk/shop_app.properties
-          echo $ENCODED_KEY | base64 --decode -o ../country_keys_test/uk/shop_app.keystore
+          #echo $ENCODED_PROPS | base64 --decode -o ../country_keys_test/uk/shop_app.properties
+          #echo $ENCODED_KEY | base64 --decode -o ../country_keys_test/uk/shop_app.keystore
           
           #Decode details and write to service.json
           echo $GOOGLE_APPLICATION_CREDENTIALS | base64 --decode -o service.json
@@ -60,8 +60,8 @@ jobs:
       # Setup the flutter environment.
       - uses: subosito/flutter-action@v1
         with:
-          channel: 'beta' # 'dev', 'alpha', default to: 'stable'
-          # flutter-version: '1.12.x' # you can also specify exact version of flutter
+          channel: 'stable' # 'dev', 'alpha', default to: 'stable'
+          flutter-version: '3.10.6' # you can also specify exact version of flutter
     
       # Get flutter dependencies.
       - run: flutter pub get
@@ -70,7 +70,8 @@ jobs:
       - name: Executing Fastlane 
         run: |
           cd  android
+          aapt
           echo GOOGLE_APPLICATION_CREDENTIALS
           echo $GOOGLE_APPLICATION_CREDENTIALS
           echo "fastlane publishBuild flavor:${{ github.event.inputs.flavor }} release_notes:${{ github.event.inputs.release_notes }} type:${{ github.event.inputs.type }}"
-          fastlane publishBuild flavor:${{ github.event.inputs.flavor }} release_notes:"${{ github.event.inputs.release_notes }}" type:${{ github.event.inputs.type }} version_name:${{ github.event.inputs.version_name }} version_code:${{ github.event.inputs.version_code }} enc_prod_key:"${{secrets.ENCRYPTION_PROD_KEY}}" enc_default_key:"${{secrets.ENCRYPTION_DEFAULT_KEY}}"
+          #fastlane publishBuild flavor:${{ github.event.inputs.flavor }} release_notes:"${{ github.event.inputs.release_notes }}" type:${{ github.event.inputs.type }} version_name:${{ github.event.inputs.version_name }} version_code:${{ github.event.inputs.version_code }} enc_prod_key:"${{secrets.ENCRYPTION_PROD_KEY}}" enc_default_key:"${{secrets.ENCRYPTION_DEFAULT_KEY}}"
