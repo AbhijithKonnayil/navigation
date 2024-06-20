@@ -26,24 +26,10 @@ jobs:
     runs-on: macos-latest
     steps:
       - run: |
-          echo "IP"
-          dig -4 TXT +short o-o.myaddr.l.google.com @ns1.google.com
-          pwd
-          echo "---"
-          mkdir -p ../country_keys_test/uk/
-          cd ../country_keys_test/uk/
-          curl  -X GET 'https://raw.githubusercontent.com/AbhijithKonnayil/navigation/main/android/props.encode.txt' > props.encode.txt
-          curl  -X GET 'https://raw.githubusercontent.com/AbhijithKonnayil/navigation/main/android/key.encode.txt' > key_encode.txt
-          base64 -Dd -i props.encode.txt -o shop_app.properties
-          base64 -Dd -i key_encode.txt -o shop_app.keystore
-          ls 
-          cd ../../
-          echo 'cd navigation' 
-          cd navigation
-          pwd
-          ls
-          ls
-          cd android
-          ls
+          echo "github.ref"
+          echo ${{github.ref}}
+          echo "github.event.ref"
+          echo ${{github.event.ref}}
+          
         #env:
         #  MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
