@@ -30,6 +30,8 @@ jobs:
           echo ${{github.ref}}
           echo "github.event.ref"
           echo ${{github.event.ref}}
+          echo "Actor"
+          echo ${{github.actor}}
           
         #env:
         #  MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
