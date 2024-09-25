@@ -31,8 +31,42 @@ jobs:
       - run: |
           echo "TAG CREATION"
       - name: Set env
-        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-      - name: Test
         run: |
-          echo $RELEASE_VERSION
-          echo ${{ env.RELEASE_VERSION }}
+         TAG_NAME=${GITHUB_REF#refs/tags/}
+
+          # Strip the 'v' prefix
+          VERSION_NAME=$(echo $TAG_NAME | cut -d'+' -f1 | cut -d'v' -f2)
+
+          # Extract the version code
+          VERSION_CODE=$(echo $TAG_NAME | cut -d'+' -f2 | cut -d'-' -f1)
+
+          # Extract the environment
+          ENV=$(echo $TAG_NAME | cut -d'+' -f2 | cut -d'-' -f2)
+
+          # Extract the country
+          COUNTRY=$(echo $TAG_NAME | cut -d'+' -f2 | cut -d'-' -f3)
+
+          # Extract the release type
+          TYPE=$(echo $TAG_NAME | cut -d'+' -f2 | cut -d'-' -f4)
+
+          # Output the extracted variables
+          echo "VERSION_NAME=$VERSION_NAME"
+          echo "VERSION_CODE=$VERSION_CODE"
+          echo "ENV=$ENV"
+          echo "COUNTRY=$COUNTRY"
+          echo "TYPE=$TYPE"
+
+          # Set outputs for use in other steps
+          echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
+          echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
+          echo "ENV=$ENV" >> $GITHUB_ENV
+          echo "COUNTRY=$COUNTRY" >> $GITHUB_ENV
+          echo "TYPE=$TYPE" >> $GITHUB_ENV
+
+      - name: Use extracted values
+        run: |
+          echo "Version Name: $VERSION_NAME"
+          echo "Version Code: $VERSION_CODE"
+          echo "Environment: $ENV"
+          echo "Country: $COUNTRY"
+          echo "Type: $TYPE"
