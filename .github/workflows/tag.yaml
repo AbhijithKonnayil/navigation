@@ -1,0 +1,32 @@
+name: TAG
+on:
+  push:
+    tags:
+      - '*'
+  workflow_dispatch:
+    inputs:
+      flavor:
+        description: 'Flavor'     
+        required: true
+        default: 'devGlobal'
+        type: choice
+        options:
+          - prodGlobal
+          - stgGlobal
+          - devGlobal
+      type:
+        description: 'Build Type - release/debug'     
+        required: true
+        default: 'debug'
+        type: choice
+        options:
+          - debug
+          - release
+      release_notes:
+        description: 'Release Notes'  
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - run: |
+          echo "TAG CREATION"
