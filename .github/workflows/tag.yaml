@@ -2,7 +2,7 @@ name: TAG
 on:
   push:
     tags:
-      - '*'
+      - 'v*'
   workflow_dispatch:
     inputs:
       flavor:
@@ -49,6 +49,9 @@ jobs:
           # Extract the release type
           TYPE=$(echo $TAG_NAME | cut -d'+' -f2 | cut -d'-' -f4)
 
+          TAG_MESSAGE=$(git for-each-ref refs/tags/$TAG_NAME --format="%(contents)")
+
+
           # Output the extracted variables
           echo "VERSION_NAME=$VERSION_NAME"
           echo "VERSION_CODE=$VERSION_CODE"
@@ -62,6 +65,7 @@ jobs:
           echo "ENV=$ENV" >> $GITHUB_ENV
           echo "COUNTRY=$COUNTRY" >> $GITHUB_ENV
           echo "TYPE=$TYPE" >> $GITHUB_ENV
+          echo "Tag Message: $TAG_MESSAGE"
 
       - name: Use extracted values
         run: |
