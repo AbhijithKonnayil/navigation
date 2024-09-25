@@ -32,7 +32,16 @@ jobs:
           echo "TAG CREATION"
       - name: Set env
         run: |
-         TAG_NAME=${GITHUB_REF#refs/tags/}
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          REGEX="^v[0-9]+\.[0-9]+\.[0-9]+\+[0-9]+-(stg|prod|dev)-(global|india|brazil)-(release|debug)$"
+
+          # Check if the tag name matches the regex
+          if [[ $TAG_NAME =~ $REGEX ]]; then
+            echo "Tag format is valid: $TAG_NAME"
+          else
+            echo "INVALID FORMAT"
+            exit 1 # Exit with error code 1 to stop the workflow if format is invalid
+          fi
 
           # Strip the 'v' prefix
           VERSION_NAME=$(echo $TAG_NAME | cut -d'+' -f1 | cut -d'v' -f2)
