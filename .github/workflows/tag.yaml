@@ -107,9 +107,7 @@ jobs:
           echo  "IS_UNIVERSAL_BUILD : $IS_UNIVERSAL_BUILD"
           echo "IS_SECURE_BUILD : $IS_SECURE_BUILD"
           echo "IS_PRE_PROD_BUILD : $IS_PRE_PROD_BUILD"
-      - name: Print
-        run: |
-          pwd
+          echo $VERSION_NAME
           cd android
           echo "fastlane publishBuildTest flavor:${{ github.event.inputs.flavor }} release_notes:$RELEASE_NOTES type:${{ github.event.inputs.type }} version_name:$VERSION_NAME version_code:$VERSION_CODE"
           fastlane publishBuildTest flavor:${{ github.event.inputs.flavor }} release_notes:$RELEASE_NOTES type:${{ github.event.inputs.type }} version_name:$VERSION_NAME version_code:$VERSION_CODE is_univeral_build:$IS_UNIVERSAL_BUILD is_preprod_build:true is_secure_build:true
