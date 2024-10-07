@@ -60,7 +60,7 @@ platform :android do
 
 
   desc "Publish App to Firebase"
-  lane :publishBuild do |options|
+  lane :publishBuildTest do |options|
     #set Variables
     flavor = options[:flavor]
     type = options[:type]
