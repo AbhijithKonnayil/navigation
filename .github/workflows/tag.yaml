@@ -124,6 +124,7 @@ jobs:
           echo "IS_SECURE_BUILD=$IS_SECURE_BUILD" >> $GITHUB_ENV
           #echo "Tag Message: $TAG_MESSAGE"
           echo $VERSION_NAME
+          echo "MY_VARIABLE=my_value" >> $GITHUB_ENV
       - run: |
           echo "::set-output name=VERSION_NAME::$VERSION_NAME"
   build:
@@ -132,6 +133,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Use extracted values
         run: |
+          echo "${{ env.MY_VARIABLE }}"
           echo "${{ steps.step1.outputs.my_output }}"
           echo "${{env}}"
           echo "${{ env.VERSION_NAME }}"
