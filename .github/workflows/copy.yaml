@@ -40,6 +40,6 @@ jobs:
         run: echo "The selected color is $SELECTED_COLOR"
       - name: Get color v2
         env:
-          SELECTED_COLOR: ${{ job1.steps.color-selector.outputs.SELECTED_COLOR }}
+          SELECTED_COLOR: ${{ steps.color-selector.outputs.SELECTED_COLOR }}
         run: echo "The selected color is $SELECTED_COLOR"
 
