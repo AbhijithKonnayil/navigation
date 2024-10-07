@@ -22,6 +22,9 @@ jobs:
           
           # Write the value to GITHUB_ENV to pass it to other jobs
           echo "VALUE=$VALUE" >> $GITHUB_ENV
+      - name: Set color
+        id: color-selector
+        run: echo "SELECTED_COLOR=green" >> "$GITHUB_OUTPUT"
 
   job2:
     runs-on: ubuntu-latest
@@ -31,3 +34,12 @@ jobs:
         run: |
           # Access the value shared from Job 1
           echo "Value passed from Job 1: $VALUE"
+      - name: Get color
+        env:
+          SELECTED_COLOR: ${{ steps.color-selector.outputs.SELECTED_COLOR }}
+        run: echo "The selected color is $SELECTED_COLOR"
+      - name: Get color v2
+        env:
+          SELECTED_COLOR: ${{ job1.steps.color-selector.outputs.SELECTED_COLOR }}
+        run: echo "The selected color is $SELECTED_COLOR"
+
