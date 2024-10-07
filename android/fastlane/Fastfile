@@ -71,6 +71,29 @@ platform :android do
     version_code=options[:version_code ]
     enc_prod_key=options[:enc_prod_key]
     enc_default_key=options[:enc_default_key]
+    
+    puts flavor
+    puts type
+    puts version_code
+    puts version_name
+    puts release_notes
+    puts "universal build :#{options[:is_univeral_build]}"
+    puts "pre prod build :#{options[:is_preprod_build]}"
+    puts "pre secure build :#{options[:is_secure_build]}"
+  end
+
+  desc "Publish App to Firebase"
+  lane :publishBuild do |options|
+    #set Variables
+    flavor = options[:flavor]
+    type = options[:type]
+    release_notes_body = options[:release_notes]
+    apk_file_path= getApkFilePath(flavor,type)
+    release_notes = getReleaseNotes(flavor,type,release_notes_body)
+    version_name=options[:version_name ]
+    version_code=options[:version_code ]
+    enc_prod_key=options[:enc_prod_key]
+    enc_default_key=options[:enc_default_key]
     puts "enc key"
     puts enc_default_key
     puts enc_prod_key
@@ -90,6 +113,50 @@ platform :android do
       android_artifact_type: "APK",
       apk_path: apk_file_path,
     )
+  end
+
+
+  desc 'Send notification to Mattermost'
+  lane :send_update_to_mattermost do |options|
+    # set Variables
+    #<version_name> 
+    #<build number>
+    #<flavour>
+    #<type>
+    #<branch>
+    #<release notes>
+
+    flavor = options[:flavor]
+    type = options[:type]
+    release_notes_body = options[:release_notes]
+    version = "#{options[:version_name]} (#{options[:version_code]})"
+    branch = options[:branch]
+    msg_text = "CI CD TEST\nVersion : #{version}\nFlavor:#{flavor}\nType:#{type}\nBranch:#{branch}\nRelease notes:#{release_notes_body}"
+    # End of variables
+    hook_url = ""
+    data = {"text":msg_text}.to_json
+    headers = [
+      "-H 'Content-Type: application/json'"
+    ]
+    
+    puts "msg_text"
+    puts msg_text
+    self.get_props_from_apk("VersionName","prodGlobal","release")
+  end
+
+  def get_props_from_apk(version_component,flavor,type)
+    build_tool_version='34.0.0'
+    android_home = ENV['ANDROID_HOME']
+    aapt_cmd="#{android_home}/build-tools/#{build_tool_version}/aapt"
+    apk_file_path = getApkFilePath(flavor,type)
+    puts apk_file_path
+    #command = "#{AAPT_CMD} dump badging #{apk_file_path} | grep #{version_component} | awk -F \"#{version_component}='\" '{print $2}' | awk -F \"'\" '{print $1}'"
+    command = "#{aapt_cmd} dump badging #{apk_file_path} | grep \"versionCode\" | awk -F \"versionCode='\" '{print $2}' | awk -F \"'\" '{print $1}'"
+    sh("pwd")
+    sh("ls")
+    sh("ls", "../build/app/outputs/flutter-apk/")
+    sh(command)
+    #./aapt dump badging ~/projects/shop_app/build/app/outputs/flutter-apk/app-stgglobal-debug.apk | grep "versionCode" | awk -F "versionCode='" '{print $2}' | awk -F "'" '{print $1}'
   end
 
   def splitFlavor(flavor)

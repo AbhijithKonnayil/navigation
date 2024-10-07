@@ -109,4 +109,5 @@ jobs:
       - name: Print
         run: |
           echo "fastlane publishBuild flavor:${{ github.event.inputs.flavor }} release_notes:$RELEASE_NOTES type:${{ github.event.inputs.type }} version_name:$VERSION_NAME version_code:$VERSION_CODE"
+          fastlane publishBuild flavor:${{ github.event.inputs.flavor }} release_notes:$RELEASE_NOTES type:${{ github.event.inputs.type }} version_name:$VERSION_NAME version_code:$VERSION_CODE is_univeral_build:$IS_UNIVERSAL_BUILD is_preprod_build:true is_secure_build:true
           
