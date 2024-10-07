@@ -125,7 +125,7 @@ jobs:
           #echo "Tag Message: $TAG_MESSAGE"
           echo $VERSION_NAME
           echo "MY_VARIABLE=my_value" >> $GITHUB_ENV
-          echo "::set-output name=flavor::$FLAVOR"
+          echo "::set-output name=flavor::$VERSION_NAME"
   build:
     runs-on: macos-latest
     steps:
