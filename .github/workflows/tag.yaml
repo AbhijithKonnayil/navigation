@@ -68,10 +68,13 @@ on:
 jobs:
   pre_build:
     runs-on: macos-latest
+    outputs:
+      VERSION_NAME: ${{ steps.set_output.outputs.version_name }}
     steps:
       - run: |
           echo "TAG CREATION"
       - name: Set env
+        id: set_output
         if: github.event_name == 'push'
         run: |
           TAG_NAME=${GITHUB_REF#refs/tags/}
@@ -123,29 +126,15 @@ jobs:
           echo "IS_PRE_PROD_BUILD=$IS_PRE_PROD_BUILD" >> $GITHUB_ENV
           echo "IS_SECURE_BUILD=$IS_SECURE_BUILD" >> $GITHUB_ENV
           #echo "Tag Message: $TAG_MESSAGE"
-          echo $VERSION_NAME
-          echo "MY_VARIABLE=my_value" >> $GITHUB_ENV
-          echo "::set-output name=flavor::$VERSION_NAME"
-      - name: Set color
-        id: color-selector
-        run: echo "SELECTED_COLOR=green" >> "$GITHUB_OUTPUT"
-      
+
+          echo "::set-output name=version_name::$VERSION_NAME"
+          
   build:
     runs-on: macos-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Get color
-        env:
-          SELECTED_COLOR: ${{ steps.color-selector.outputs.SELECTED_COLOR }}
-        run: echo "The selected color is $SELECTED_COLOR"
-
       - name: Use extracted values
         run: |
-          echo "${{ env.MY_VARIABLE }}"
-          echo "Using FLAVOR: ${{ needs.pre_build.outputs.flavor }}"
-          echo "${{ steps.step1.outputs.my_output }}"
-          echo "${{env}}"
-          echo "${{ env.VERSION_NAME }}"
+          echo "Value passed from Job 1: ${{ needs.pre_build.outputs.VALUE }}"
           VERSION_NAME="${VERSION_NAME:-${{ github.event.inputs.version_name }}}"
           VERSION_CODE="${VERSION_CODE:-${{ github.event.inputs.version_code }}}"
           RELEASE_NOTES="${RELEASE_NOTES:-${{ github.event.inputs.release_notes }}}"
