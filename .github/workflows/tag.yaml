@@ -25,7 +25,7 @@ on:
       release_notes:
         description: 'Release Notes'  
 jobs:
-  build:
+  pre_build:
     runs-on: macos-latest
     steps:
       - run: |
@@ -82,9 +82,13 @@ jobs:
           echo "IS_PRE_PROD_BUILD=$IS_PRE_PROD_BUILD" >> $GITHUB_ENV
           echo "IS_SECURE_BUILD=$IS_SECURE_BUILD" >> $GITHUB_ENV
           #echo "Tag Message: $TAG_MESSAGE"
-
+  build:
+    runs-on: macos-latest
+    steps:
       - name: Use extracted values
         run: |
+          VERSION_NAME="${VERSION_NAME:-${{ github.event.inputs.version_name }}}"
+          VERSION_CODE="${VERSION_CODE:-${{ github.event.inputs.version_code }}}"
           echo "Version Name: $VERSION_NAME"
           echo "Version Code: $VERSION_CODE"
           echo "Environment: $ENV"
@@ -93,3 +97,7 @@ jobs:
           echo  "IS_UNIVERSAL_BUILD : $IS_UNIVERSAL_BUILD"
           echo "IS_SECURE_BUILD : $IS_SECURE_BUILD"
           echo "IS_PRE_PROD_BUILD : $IS_PRE_PROD_BUILD"
+      - name: Print
+        run: |
+          echo "fastlane publishBuild flavor:${{ github.event.inputs.flavor }} release_notes:"${{ github.event.inputs.release_notes }}" type:${{ github.event.inputs.type }} version_name:$VERSION_NAME version_code:$VERSION_CODE"
+          
