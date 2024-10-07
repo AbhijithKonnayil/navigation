@@ -5,15 +5,18 @@ on:
       - 'AOS-v*'
   workflow_dispatch:
     inputs:
-      flavor:
-        description: 'Flavor'     
-        required: true
-        default: 'devGlobal'
-        type: choice
-        options:
-          - prodGlobal
-          - stgGlobal
-          - devGlobal
+      is_universal:
+        description: 'Universal Build'
+        required: false
+        default: 'false'
+      is_preprod:
+        description: 'Pre Prod Build'
+        required: false
+        default: 'false'
+      is_secure:
+        description: 'Secure'
+        required: false
+        default: 'false'
       country:
         description: 'Country'     
         required: true
@@ -121,15 +124,13 @@ jobs:
           ENV="${ENV:-${{ github.event.inputs.env}}}"
           COUNTRY="${COUNTRY:-${{ github.event.inputs.country }}}"
           TYPE="${TYPE:-${{ github.event.inputs.type}}}"
+          IS_UNIVERSAL_BUILD="${IS_UNIVERSAL_BUILD:-${{ github.event.inputs.is_universal}}}"
+          IS_SECURE_BUILD="${IS_SECURE_BUILD:-${{ github.event.inputs.is_secure}}}"
+          IS_PRE_PROD_BUILD="${IS_PRE_PROD_BUILD:-${{ github.event.inputs.is_preprod}}}"
           
           COUNTRY_SENTANCE_CASE="$(echo "${COUNTRY:0:1}" | tr '[:lower:]' '[:upper:]')$(echo "${COUNTRY:1}" | tr '[:upper:]' '[:lower:]')"
           FLAVOR="${ENV}${COUNTRY_SENTANCE_CASE}"
           
-          
-          echo  "IS_UNIVERSAL_BUILD : $IS_UNIVERSAL_BUILD"
-          echo "IS_SECURE_BUILD : $IS_SECURE_BUILD"
-          echo "IS_PRE_PROD_BUILD : $IS_PRE_PROD_BUILD"
           cd android
           echo "fastlane publishBuildTest flavor:$FLAVOR release_notes:$RELEASE_NOTES type:$TYPE version_name:$VERSION_NAME version_code:$VERSION_CODE is_univeral_build:$IS_UNIVERSAL_BUILD is_preprod_build:$IS_PRE_PROD_BUILD is_secure_build:$IS_SECURE_BUILD"
           fastlane publishBuildTest flavor:$FLAVOR release_notes:$RELEASE_NOTES type:$TYPE version_name:$VERSION_NAME version_code:$VERSION_CODE is_univeral_build:$IS_UNIVERSAL_BUILD is_preprod_build:$IS_PRE_PROD_BUILD is_secure_build:$IS_SECURE_BUILD
-          
