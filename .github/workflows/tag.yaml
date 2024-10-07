@@ -119,19 +119,21 @@ jobs:
           echo "ENV=$ENV" >> $GITHUB_ENV
           echo "COUNTRY=$COUNTRY" >> $GITHUB_ENV
           echo "TYPE=$TYPE" >> $GITHUB_ENV
-          echo "TYPE=$TYPE" >> $GITHUB_ENV
           echo "IS_UNIVERSAL_BUILD=$IS_UNIVERSAL_BUILD" >> $GITHUB_ENV
           echo "IS_PRE_PROD_BUILD=$IS_PRE_PROD_BUILD" >> $GITHUB_ENV
           echo "IS_SECURE_BUILD=$IS_SECURE_BUILD" >> $GITHUB_ENV
           #echo "Tag Message: $TAG_MESSAGE"
+          echo $VERSION_NAME
+          run: echo "::set-output name=VERSION_NAME::$VERSION_NAME"
   build:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
       - name: Use extracted values
         run: |
+          echo "${{ steps.step1.outputs.my_output }}"
           echo "${{env}}"
-          echo "${{env.VERSION_NAME}}"
+          echo "${{ env.VERSION_NAME }}"
           VERSION_NAME="${VERSION_NAME:-${{ github.event.inputs.version_name }}}"
           VERSION_CODE="${VERSION_CODE:-${{ github.event.inputs.version_code }}}"
           RELEASE_NOTES="${RELEASE_NOTES:-${{ github.event.inputs.release_notes }}}"
