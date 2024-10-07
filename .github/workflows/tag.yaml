@@ -31,6 +31,7 @@ jobs:
       - run: |
           echo "TAG CREATION"
       - name: Set env
+        if: github.event_name == 'push'
         run: |
           TAG_NAME=${GITHUB_REF#refs/tags/}
           REGEX="^AOS-v[0-9]+\.[0-9]+\.[0-9]+\+[0-9]+-(stg|prod|dev)-(global|india|brazil|china)-(release|debug)(--(universal|preprod|secure)(-(universal|preprod|secure)){0,2})?$"
