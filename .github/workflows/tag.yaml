@@ -69,7 +69,8 @@ jobs:
   pre_build:
     runs-on: macos-latest
     outputs:
-      VERSION_NAME: ${{ steps.set_output.outputs.version_name }}
+      VERSION_NAME: ${{ steps.set_output.outputs.VERSION_NAME }}
+      VERSION_CODE: ${{ steps.set_output.outputs.VERSION_CODE }}
     steps:
       - run: |
           echo "TAG CREATION"
@@ -127,7 +128,8 @@ jobs:
           echo "IS_SECURE_BUILD=$IS_SECURE_BUILD" >> $GITHUB_ENV
           #echo "Tag Message: $TAG_MESSAGE"
           echo $VERSION_NAME
-          echo "::set-output name=version_name::$VERSION_NAME"
+          echo "::set-output name=VERSION_NAME::$VERSION_NAME"
+          echo "::set-output name=VERSION_CODE::$VERSION_CODE"
           
   build:
     runs-on: macos-latest
@@ -136,8 +138,8 @@ jobs:
       - name: Use extracted values
         run: |
           echo "Value passed from Prebuild: ${{ needs.pre_build.outputs.VERSION_NAME }}"
-          VERSION_NAME="${VERSION_NAME:-${{ github.event.inputs.version_name }}}"
-          VERSION_CODE="${VERSION_CODE:-${{ github.event.inputs.version_code }}}"
+          VERSION_NAME="${needs.pre_build.outputs.VERSION_NAME :-${{ github.event.inputs.version_name }}}"
+          VERSION_CODE="${needs.pre_build.outputs.VERSION_CODE:-${{ github.event.inputs.version_code }}}"
           RELEASE_NOTES="${RELEASE_NOTES:-${{ github.event.inputs.release_notes }}}"
           ENV="${ENV:-${{ github.event.inputs.env}}}"
           COUNTRY="${COUNTRY:-${{ github.event.inputs.country }}}"
