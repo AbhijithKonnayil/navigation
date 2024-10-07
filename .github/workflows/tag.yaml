@@ -131,10 +131,11 @@ jobs:
           
   build:
     runs-on: macos-latest
+    needs: pre_build
     steps:
       - name: Use extracted values
         run: |
-          echo "Value passed from Job 1: ${{ needs.pre_build.outputs.VERSION_NAME }}"
+          echo "Value passed from Prebuild: ${{ needs.pre_build.outputs.VERSION_NAME }}"
           VERSION_NAME="${VERSION_NAME:-${{ github.event.inputs.version_name }}}"
           VERSION_CODE="${VERSION_CODE:-${{ github.event.inputs.version_code }}}"
           RELEASE_NOTES="${RELEASE_NOTES:-${{ github.event.inputs.release_notes }}}"
