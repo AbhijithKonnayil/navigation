@@ -23,7 +23,14 @@ on:
           - debug
           - release
       release_notes:
-        description: 'Release Notes'  
+        description: 'Release Notes'
+        required: true
+      version_name:
+        description: 'Version Name (major.minor.patch) [refer firebase] '
+        required: true
+      version_code:
+        description: 'Version Code [refer firebase]'
+        required: true 
 jobs:
   pre_build:
     runs-on: macos-latest
@@ -90,6 +97,7 @@ jobs:
         run: |
           VERSION_NAME="${VERSION_NAME:-${{ github.event.inputs.version_name }}}"
           VERSION_CODE="${VERSION_CODE:-${{ github.event.inputs.version_code }}}"
+          RELEASE_NOTES=${RELEASE_NOTES:-${{ github.event.inputs.release_notes }}}"
           echo "Version Name: $VERSION_NAME"
           echo "Version Code: $VERSION_CODE"
           echo "Environment: $ENV"
@@ -100,5 +108,5 @@ jobs:
           echo "IS_PRE_PROD_BUILD : $IS_PRE_PROD_BUILD"
       - name: Print
         run: |
-          echo "fastlane publishBuild flavor:${{ github.event.inputs.flavor }} release_notes:"${{ github.event.inputs.release_notes }}" type:${{ github.event.inputs.type }} version_name:$VERSION_NAME version_code:$VERSION_CODE"
+          echo "fastlane publishBuild flavor:${{ github.event.inputs.flavor }} release_notes:$RELEASE_NOTES type:${{ github.event.inputs.type }} version_name:$VERSION_NAME version_code:$VERSION_CODE"
           
