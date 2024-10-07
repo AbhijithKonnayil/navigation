@@ -126,10 +126,19 @@ jobs:
           echo $VERSION_NAME
           echo "MY_VARIABLE=my_value" >> $GITHUB_ENV
           echo "::set-output name=flavor::$VERSION_NAME"
+      - name: Set color
+        id: color-selector
+        run: echo "SELECTED_COLOR=green" >> "$GITHUB_OUTPUT"
+      
   build:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Get color
+        env:
+          SELECTED_COLOR: ${{ steps.color-selector.outputs.SELECTED_COLOR }}
+        run: echo "The selected color is $SELECTED_COLOR"
+
       - name: Use extracted values
         run: |
           echo "${{ env.MY_VARIABLE }}"
