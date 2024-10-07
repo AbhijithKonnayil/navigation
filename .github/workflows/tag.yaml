@@ -97,7 +97,7 @@ jobs:
         run: |
           VERSION_NAME="${VERSION_NAME:-${{ github.event.inputs.version_name }}}"
           VERSION_CODE="${VERSION_CODE:-${{ github.event.inputs.version_code }}}"
-          RELEASE_NOTES=${RELEASE_NOTES:-${{ github.event.inputs.release_notes }}}"
+          RELEASE_NOTES="${RELEASE_NOTES:-${{ github.event.inputs.release_notes }}}"
           echo "Version Name: $VERSION_NAME"
           echo "Version Code: $VERSION_CODE"
           echo "Environment: $ENV"
