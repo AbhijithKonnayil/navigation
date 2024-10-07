@@ -125,8 +125,7 @@ jobs:
           #echo "Tag Message: $TAG_MESSAGE"
           echo $VERSION_NAME
           echo "MY_VARIABLE=my_value" >> $GITHUB_ENV
-      - run: |
-          echo "::set-output name=VERSION_NAME::$VERSION_NAME"
+          echo "::set-output name=flavor::$FLAVOR"
   build:
     runs-on: macos-latest
     steps:
@@ -134,6 +133,7 @@ jobs:
       - name: Use extracted values
         run: |
           echo "${{ env.MY_VARIABLE }}"
+          echo "Using FLAVOR: ${{ needs.pre_build.outputs.flavor }}"
           echo "${{ steps.step1.outputs.my_output }}"
           echo "${{env}}"
           echo "${{ env.VERSION_NAME }}"
