@@ -14,6 +14,25 @@ on:
           - prodGlobal
           - stgGlobal
           - devGlobal
+      country:
+        description: 'Country'     
+        required: true
+        default: 'Global'
+        type: choice
+        options:
+          - Global
+          - India
+          - China
+          - Brazil
+      env:
+        description: 'Env'     
+        required: true
+        default: 'stg'
+        type: choice
+        options:
+          - dev
+          - stg
+          - prod
       type:
         description: 'Build Type - release/debug'     
         required: true
@@ -99,16 +118,18 @@ jobs:
           VERSION_NAME="${VERSION_NAME:-${{ github.event.inputs.version_name }}}"
           VERSION_CODE="${VERSION_CODE:-${{ github.event.inputs.version_code }}}"
           RELEASE_NOTES="${RELEASE_NOTES:-${{ github.event.inputs.release_notes }}}"
-          echo "Version Name: $VERSION_NAME"
-          echo "Version Code: $VERSION_CODE"
-          echo "Environment: $ENV"
-          echo "Country: $COUNTRY"
-          echo "Type: $TYPE"
+          ENV="${ENV:-${{ github.event.inputs.env}}}"
+          COUNTRY="${COUNTRY:-${{ github.event.inputs.country }}}"
+          TYPE="${TYPE:-${{ github.event.inputs.type}}}"
+          
+          COUNTRY_SENTANCE_CASE="$(echo "${COUNTRY:0:1}" | tr '[:lower:]' '[:upper:]')$(echo "${COUNTRY:1}" | tr '[:upper:]' '[:lower:]')"
+          FLAVOR="${ENV}${COUNTRY_SENTANCE_CASE}"
+          
+          
           echo  "IS_UNIVERSAL_BUILD : $IS_UNIVERSAL_BUILD"
           echo "IS_SECURE_BUILD : $IS_SECURE_BUILD"
           echo "IS_PRE_PROD_BUILD : $IS_PRE_PROD_BUILD"
-          echo $VERSION_NAME
           cd android
-          echo "fastlane publishBuildTest flavor:${{ github.event.inputs.flavor }} release_notes:$RELEASE_NOTES type:${{ github.event.inputs.type }} version_name:$VERSION_NAME version_code:$VERSION_CODE"
-          fastlane publishBuildTest flavor:${{ github.event.inputs.flavor }} release_notes:$RELEASE_NOTES type:${{ github.event.inputs.type }} version_name:$VERSION_NAME version_code:$VERSION_CODE is_univeral_build:$IS_UNIVERSAL_BUILD is_preprod_build:true is_secure_build:true
+          echo "fastlane publishBuildTest flavor:$FLAVOR release_notes:$RELEASE_NOTES type:$TYPE version_name:$VERSION_NAME version_code:$VERSION_CODE is_univeral_build:$IS_UNIVERSAL_BUILD is_preprod_build:$IS_PRE_PROD_BUILD is_secure_build:$IS_SECURE_BUILD"
+          fastlane publishBuildTest flavor:$FLAVOR release_notes:$RELEASE_NOTES type:$TYPE version_name:$VERSION_NAME version_code:$VERSION_CODE is_univeral_build:$IS_UNIVERSAL_BUILD is_preprod_build:$IS_PRE_PROD_BUILD is_secure_build:$IS_SECURE_BUILD
           
