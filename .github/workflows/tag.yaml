@@ -2,7 +2,7 @@ name: TAG
 on:
   push:
     tags:
-      - 'v*'
+      - 'AOS-v*'
   workflow_dispatch:
     inputs:
       flavor:
@@ -33,40 +33,43 @@ jobs:
       - name: Set env
         run: |
           TAG_NAME=${GITHUB_REF#refs/tags/}
-          REGEX="^v[0-9]+\.[0-9]+\.[0-9]+\+[0-9]+-(stg|prod|dev)-(global|india|brazil)-(release|debug)$"
+          REGEX="^AOS-v[0-9]+\.[0-9]+\.[0-9]+\+[0-9]+-(stg|prod|dev)-(global|india|brazil|china)-(release|debug)(--(universal|preprod|secure)(-(universal|preprod|secure)){0,2})?$"
 
-          # Check if the tag name matches the regex
+          # Check if the TAG_NAME matches the regex
           if [[ $TAG_NAME =~ $REGEX ]]; then
-            echo "Tag format is valid: $TAG_NAME"
+              echo "Tag format is valid: $TAG_NAME"
           else
-            echo "INVALID FORMAT"
-            exit 1 # Exit with error code 1 to stop the workflow if format is invalid
+              echo "INVALID TAG FORMAT"
+              exit 1 # Exit with error code 1 to stop the workflow if format is invalid
           fi
 
-          # Strip the 'v' prefix
+
+          # Extract the required parts
           VERSION_NAME=$(echo $TAG_NAME | cut -d'+' -f1 | cut -d'v' -f2)
-
-          # Extract the version code
           VERSION_CODE=$(echo $TAG_NAME | cut -d'+' -f2 | cut -d'-' -f1)
-
-          # Extract the environment
-          ENV=$(echo $TAG_NAME | cut -d'+' -f2 | cut -d'-' -f2)
-
-          # Extract the country
-          COUNTRY=$(echo $TAG_NAME | cut -d'+' -f2 | cut -d'-' -f3)
-
-          # Extract the release type
-          TYPE=$(echo $TAG_NAME | cut -d'+' -f2 | cut -d'-' -f4)
+          ENV=$(echo $TAG_NAME | cut -d'-' -f3)
+          COUNTRY=$(echo $TAG_NAME | cut -d'-' -f4)
+          TYPE=$(echo $TAG_NAME | cut -d'-' -f5)
+          OPTIONAL_STR=$(echo $TAG_NAME | awk -F'--' '{print $2}')
+          IFS='-' read -r -a OPTIONAL_ARRAY <<< "$OPTIONAL_STR"
+          OPTIONAL_PRINT_OUT=$(printf "%s\n" "${OPTIONAL_ARRAY[@]}")
+          IS_UNIVERSAL_BUILD="false"
+          IS_PRE_PROD_BUILD="false"
+          IS_SECURE_BUILD="false"
 
           #TAG_MESSAGE=$(git for-each-ref refs/tags/$TAG_NAME --format="%(contents)")
 
+          if echo "$OPTIONAL_PRINT_OUT" | grep -q "universal"; then
+              IS_UNIVERSAL_BUILD="true"
+          fi
 
-          # Output the extracted variables
-          echo "VERSION_NAME=$VERSION_NAME"
-          echo "VERSION_CODE=$VERSION_CODE"
-          echo "ENV=$ENV"
-          echo "COUNTRY=$COUNTRY"
-          echo "TYPE=$TYPE"
+          if echo "$OPTIONAL_PRINT_OUT" | grep -q "preprod"; then
+              IS_PRE_PROD_BUILD="true"
+          fi
+
+          if echo "$OPTIONAL_PRINT_OUT" | grep -q "secure"; then
+              IS_SECURE_BUILD="true"
+          fi
 
           # Set outputs for use in other steps
           echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
@@ -74,6 +77,10 @@ jobs:
           echo "ENV=$ENV" >> $GITHUB_ENV
           echo "COUNTRY=$COUNTRY" >> $GITHUB_ENV
           echo "TYPE=$TYPE" >> $GITHUB_ENV
+          echo "TYPE=$TYPE" >> $GITHUB_ENV
+          echo "IS_UNIVERSAL_BUILD=$IS_UNIVERSAL_BUILD" >> $GITHUB_ENV
+          echo "IS_PRE_PROD_BUILD=$IS_PRE_PROD_BUILD" >> $GITHUB_ENV
+          echo "IS_SECURE_BUILD=$IS_SECURE_BUILD" >> $GITHUB_ENV
           #echo "Tag Message: $TAG_MESSAGE"
 
       - name: Use extracted values
@@ -83,3 +90,6 @@ jobs:
           echo "Environment: $ENV"
           echo "Country: $COUNTRY"
           echo "Type: $TYPE"
+          echo  "IS_UNIVERSAL_BUILD : $IS_UNIVERSAL_BUILD"
+          echo "IS_SECURE_BUILD : $IS_SECURE_BUILD"
+          echo "IS_PRE_PROD_BUILD : $IS_PRE_PROD_BUILD"
