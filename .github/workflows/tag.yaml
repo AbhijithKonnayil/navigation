@@ -163,7 +163,7 @@ jobs:
               RELEASE_NOTES=$(git tag -l $TAG_NAME --format='%(subject)')
               git tag -l $TAG_NAME --format='%(subject)'
               git tag -l --format='%(subject)'
-              echo $RELEASE_NOTES}
+              echo $RELEASE_NOTES
           else
               VERSION_NAME=${{ github.event.inputs.version_name}}
               VERSION_CODE=${{ github.event.inputs.version_code}}
