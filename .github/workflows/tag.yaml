@@ -69,8 +69,17 @@ jobs:
   pre_build:
     runs-on: macos-latest
     outputs:
+      MODE: ${{ steps.set_output.outputs.MODE }}
       VERSION_NAME: ${{ steps.set_output.outputs.VERSION_NAME }}
       VERSION_CODE: ${{ steps.set_output.outputs.VERSION_CODE }}
+      RELEASE_NOTES: ${{ steps.set_output.outputs.RELEASE_NOTES}}
+      ENV: ${{ steps.set_output.outputs.ENV}}
+      COUNTRY: ${{ steps.set_output.outputs.COUNTRY}}
+      TYPE: ${{ steps.set_output.outputs.TYPE}}
+      IS_UNIVERSAL_BUILD: ${{ steps.set_output.outputs.IS_UNIVERSAL_BUILD}}
+      IS_SECURE_BUILD: ${{ steps.set_output.outputs.IS_SECURE_BUILD}}
+      IS_PRE_PROD_BUILD: ${{ steps.set_output.outputs.IS_PRE_PROD_BUILD}}
+
     steps:
       - run: |
           echo "TAG CREATION"
@@ -128,8 +137,16 @@ jobs:
           echo "IS_SECURE_BUILD=$IS_SECURE_BUILD" >> $GITHUB_ENV
           #echo "Tag Message: $TAG_MESSAGE"
           echo $VERSION_NAME
+          echo "::set-output name=MODE::TAG"
           echo "::set-output name=VERSION_NAME::$VERSION_NAME"
           echo "::set-output name=VERSION_CODE::$VERSION_CODE"
+          echo "::set-output name=RELEASE_NOTES::$RELEASE_NOTES"
+          echo "::set-output name=ENV::$ENV"
+          echo "::set-output name=COUNTRY::$COUNTRY"
+          echo "::set-output name=TYPE::$TYPE"
+          echo "::set-output name=IS_UNIVERSAL_BUILD::$IS_UNIVERSAL_BUILD"
+          echo "::set-output name=IS_SECURE_BUILD::$IS_SECURE_BUILD"
+          echo "::set-output name=IS_PRE_PROD_BUILD::$IS_PRE_PROD_BUILD"
           
   build:
     runs-on: macos-latest
@@ -137,19 +154,29 @@ jobs:
     steps:
       - name: Use extracted values
         run: |
-          echo "Value passed from Prebuild: ${{ needs.pre_build.outputs.VERSION_NAME }}"
-          VERSION_NAME=${{needs.pre_build.outputs.VERSION_NAME}}
+          MODE="${{ needs.pre_build.outputs.MODE }}"
 
-          VERSION_CODE="${{ needs.pre_build.outputs.VERSION_CODE != '' && needs.pre_build.outputs.VERSION_CODE || github.event.inputs.version_code }}"
-          
-          VERSION_NAME="${VERSION_NAME :-${{ github.event.inputs.version_name }}}"
-          RELEASE_NOTES="${RELEASE_NOTES:-${{ github.event.inputs.release_notes }}}"
-          ENV="${ENV:-${{ github.event.inputs.env}}}"
-          COUNTRY="${COUNTRY:-${{ github.event.inputs.country }}}"
-          TYPE="${TYPE:-${{ github.event.inputs.type}}}"
-          IS_UNIVERSAL_BUILD="${IS_UNIVERSAL_BUILD:-${{ github.event.inputs.is_universal}}}"
-          IS_SECURE_BUILD="${IS_SECURE_BUILD:-${{ github.event.inputs.is_secure}}}"
-          IS_PRE_PROD_BUILD="${IS_PRE_PROD_BUILD:-${{ github.event.inputs.is_preprod}}}"
+          if [ "$MODE" = 'TAG' ]; then
+              VERSION_NAME=${{needs.pre_build.outputs.VERSION_NAME}}
+              VERSION_CODE=${{needs.pre_build.outputs.VERSION_CODE}}
+              RELEASE_NOTES=${{needs.pre_build.outputs.RELEASE_NOTES}}
+              ENV=${{needs.pre_build.outputs.ENV}}
+              COUNTRY=${{needs.pre_build.outputs.COUNTRY}}
+              TYPE=${{needs.pre_build.outputs.TYPE}}
+              IS_UNIVERSAL_BUILD=${{needs.pre_build.outputs.IS_UNIVERSAL_BUILD}}
+              IS_SECURE_BUILD=${{needs.pre_build.outputs.IS_SECURE_BUILD}}
+              IS_PRE_PROD_BUILD=${{needs.pre_build.outputs.IS_PRE_PROD_BUILD}}
+          else
+              VERSION_NAME=${{ github.event.inputs.version_name}}
+              VERSION_CODE=${{ github.event.inputs.version_code}}
+              RELEASE_NOTES=${{ github.event.inputs.release_notes}}
+              ENV=${{ github.event.inputs.env}}
+              COUNTRY=${{ github.event.inputs.country}}
+              TYPE=${{ github.event.inputs.type}}
+              IS_UNIVERSAL_BUILD=${{ github.event.inputs.is_universal}}
+              IS_SECURE_BUILD=${{ github.event.inputs.is_preprod}}
+              IS_PRE_PROD_BUILD=${{ github.event.inputs.is_secure}}
+          fi
           
           COUNTRY_SENTANCE_CASE="$(echo "${COUNTRY:0:1}" | tr '[:lower:]' '[:upper:]')$(echo "${COUNTRY:1}" | tr '[:upper:]' '[:lower:]')"
           FLAVOR="${ENV}${COUNTRY_SENTANCE_CASE}"
