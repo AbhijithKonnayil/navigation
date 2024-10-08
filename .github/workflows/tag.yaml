@@ -169,6 +169,8 @@ jobs:
               # Output the tag details (optional)
               git tag -n9 
               git tag -l "$TAG_NAME" --format='%(subject)'
+              TAG_MESSAGE=$(git for-each-ref refs/tags/$TAG_NAME --format="%(contents)")
+              echo "$TAG_MESSAGE"
               echo "$RELEASE_NOTES"
           else
               echo "inside else"
@@ -183,7 +185,6 @@ jobs:
               IS_PRE_PROD_BUILD="${{ github.event.inputs.is_preprod }}"
           fi
 
-          
           COUNTRY_SENTANCE_CASE="$(echo "${COUNTRY:0:1}" | tr '[:lower:]' '[:upper:]')$(echo "${COUNTRY:1}" | tr '[:upper:]' '[:lower:]')"
           FLAVOR="${ENV}${COUNTRY_SENTANCE_CASE}"
           pwd
