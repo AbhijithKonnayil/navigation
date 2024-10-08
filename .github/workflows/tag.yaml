@@ -152,6 +152,7 @@ jobs:
     runs-on: macos-latest
     needs: pre_build
     steps:
+      - uses: actions/checkout@v2
       - name: Use extracted values
         run: |
           MODE="${{ needs.pre_build.outputs.MODE }}"
