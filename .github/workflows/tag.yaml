@@ -126,17 +126,6 @@ jobs:
               IS_SECURE_BUILD="true"
           fi
 
-          # Set outputs for use in other steps
-          echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_ENV
-          echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_ENV
-          echo "ENV=$ENV" >> $GITHUB_ENV
-          echo "COUNTRY=$COUNTRY" >> $GITHUB_ENV
-          echo "TYPE=$TYPE" >> $GITHUB_ENV
-          echo "IS_UNIVERSAL_BUILD=$IS_UNIVERSAL_BUILD" >> $GITHUB_ENV
-          echo "IS_PRE_PROD_BUILD=$IS_PRE_PROD_BUILD" >> $GITHUB_ENV
-          echo "IS_SECURE_BUILD=$IS_SECURE_BUILD" >> $GITHUB_ENV
-          #echo "Tag Message: $TAG_MESSAGE"
-          echo $VERSION_NAME
           echo "::set-output name=MODE::TAG"
           echo "::set-output name=VERSION_NAME::$VERSION_NAME"
           echo "::set-output name=VERSION_CODE::$VERSION_CODE"
@@ -178,10 +167,11 @@ jobs:
               IS_SECURE_BUILD=${{ github.event.inputs.is_preprod}}
               IS_PRE_PROD_BUILD=${{ github.event.inputs.is_secure}}
           fi
-          
+          COMMIT_HASH=$(git rev-list -n 1 $TAG_NAME) 
+          TAG_MESSAGE=$(git log -1 --pretty=%B $COMMIT_HASH)
           COUNTRY_SENTANCE_CASE="$(echo "${COUNTRY:0:1}" | tr '[:lower:]' '[:upper:]')$(echo "${COUNTRY:1}" | tr '[:upper:]' '[:lower:]')"
           FLAVOR="${ENV}${COUNTRY_SENTANCE_CASE}"
 
           cd android
-          echo "fastlane publishBuildTest flavor:$FLAVOR release_notes:$RELEASE_NOTES type:$TYPE version_name:$VERSION_NAME version_code:$VERSION_CODE is_univeral_build:$IS_UNIVERSAL_BUILD is_preprod_build:$IS_PRE_PROD_BUILD is_secure_build:$IS_SECURE_BUILD"
-          fastlane publishBuildTest flavor:$FLAVOR release_notes:"$RELEASE_NOTES" type:$TYPE version_name:$VERSION_NAME version_code:$VERSION_CODE is_univeral_build:$IS_UNIVERSAL_BUILD is_preprod_build:$IS_PRE_PROD_BUILD is_secure_build:$IS_SECURE_BUILD
+          echo "fastlane publishBuildTest flavor:$FLAVOR release_notes:$TAG_MESSAGE type:$TYPE version_name:$VERSION_NAME version_code:$VERSION_CODE is_univeral_build:$IS_UNIVERSAL_BUILD is_preprod_build:$IS_PRE_PROD_BUILD is_secure_build:$IS_SECURE_BUILD"
+          fastlane publishBuildTest flavor:$FLAVOR release_notes:"$TAG_MESSAGE" type:$TYPE version_name:$VERSION_NAME version_code:$VERSION_CODE is_univeral_build:$IS_UNIVERSAL_BUILD is_preprod_build:$IS_PRE_PROD_BUILD is_secure_build:$IS_SECURE_BUILD
