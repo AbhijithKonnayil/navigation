@@ -65,7 +65,8 @@ on:
         options:
           - true
           - false
-      
+env:
+  WORKFLOW_VARIABLE: "anit"
 jobs:
   pre_build:
     runs-on: macos-latest
@@ -85,6 +86,8 @@ jobs:
     steps:
       - run: |
           echo "TAG CREATION"
+          echo WORKFLOW_VARIABLE
+          echo $WORKFLOW_VARIABLE
       - name: Set env
         id: set_output
         if: github.event_name == 'push'
@@ -146,6 +149,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: Use extracted values
         run: |
+          echo WORKFLOW_VARIABLE
+          echo $WORKFLOW_VARIABLE
           MODE="${{ needs.pre_build.outputs.MODE }}"
           echo "MODE"
           echo $MODE
@@ -187,4 +192,6 @@ jobs:
           fastlane publishBuildTest flavor:$FLAVOR release_notes:"$RELEASE_NOTES" type:$TYPE version_name:$VERSION_NAME version_code:$VERSION_CODE is_univeral_build:$IS_UNIVERSAL_BUILD is_preprod_build:$IS_PRE_PROD_BUILD is_secure_build:$IS_SECURE_BUILD
       - name: REPEAT USING
         run: |
+          echo WORKFLOW_VARIABLE
+          echo $WORKFLOW_VARIABLE
           echo "fastlane publishBuildTest flavor:$FLAVOR release_notes:$RELEASE_NOTES type:$TYPE version_name:$VERSION_NAME version_code:$VERSION_CODE is_univeral_build:$IS_UNIVERSAL_BUILD is_preprod_build:$IS_PRE_PROD_BUILD is_secure_build:$IS_SECURE_BUILD"
