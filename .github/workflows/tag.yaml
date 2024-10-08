@@ -172,6 +172,9 @@ jobs:
               TAG_MESSAGE=$(git for-each-ref refs/tags/$TAG_NAME --format="%(contents)")
               echo "$TAG_MESSAGE"
               echo "$RELEASE_NOTES"
+
+              git fetch --depth=1 origin +refs/tags/*:refs/tags/$TAG_NAME
+              git tag -l --format='%(contents:subject)' ${GITHUB_REF#refs/*/}
           else
               echo "inside else"
               VERSION_NAME="${{ github.event.inputs.version_name }}"
