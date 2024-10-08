@@ -150,8 +150,9 @@ jobs:
           echo "MODE"
           echo $MODE
           if [ "$MODE" = 'TAG' ]; then
-              TAG_NAME="${{ needs.pre_build.outputs.TAG_NAME }}"
-              VERSION_NAME="${{ needs.pre_build.outputs.VERSION_NAME }}"
+              #TAG_NAME="${{ needs.pre_build.outputs.TAG_NAME }}"
+              echo  "TAG_NAME="${{ needs.pre_build.outputs.TAG_NAME }}"" >> "$GITHUB_ENV"
+              echo  "VERSION_NAME="${{ needs.pre_build.outputs.VERSION_NAME }}"" >> "$GITHUB_ENV"
               VERSION_CODE="${{ needs.pre_build.outputs.VERSION_CODE }}"
               RELEASE_NOTES="${{ needs.pre_build.outputs.RELEASE_NOTES }}"
               ENV="${{ needs.pre_build.outputs.ENV }}"
