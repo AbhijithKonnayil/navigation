@@ -138,8 +138,11 @@ jobs:
       - name: Use extracted values
         run: |
           echo "Value passed from Prebuild: ${{ needs.pre_build.outputs.VERSION_NAME }}"
-          VERSION_NAME="${needs.pre_build.outputs.VERSION_NAME :-${{ github.event.inputs.version_name }}}"
-          VERSION_CODE="${needs.pre_build.outputs.VERSION_CODE:-${{ github.event.inputs.version_code }}}"
+          VERSION_NAME=${{needs.pre_build.outputs.VERSION_NAME}}
+
+          VERSION_CODE="${{ needs.pre_build.outputs.VERSION_CODE != '' && needs.pre_build.outputs.VERSION_CODE || github.event.inputs.version_code }}"
+          
+          VERSION_NAME="${VERSION_NAME :-${{ github.event.inputs.version_name }}}"
           RELEASE_NOTES="${RELEASE_NOTES:-${{ github.event.inputs.release_notes }}}"
           ENV="${ENV:-${{ github.event.inputs.env}}}"
           COUNTRY="${COUNTRY:-${{ github.event.inputs.country }}}"
