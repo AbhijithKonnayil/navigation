@@ -154,9 +154,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Use extracted values
+        id: set_output
         run: |
-          echo WORKFLOW_VARIABLE
-          echo $WORKFLOW_VARIABLE
           MODE="${{ needs.pre_build.outputs.MODE }}"
           echo "MODE"
           echo $MODE
@@ -218,15 +217,15 @@ jobs:
       - name: Set env variables
         run: |
           #write serice.json file path to GOOGLE_APPLICATION_CREDENTIALS env
-          echo "GOOGLE_APPLICATION_CREDENTIALS=$(readlink -f ../service.json)" >> "$GITHUB_ENV"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=sdf" >> "$GITHUB_ENV"
       
       - name: Executing Fastlane Upload  
         run: |
           cd android
-          fastlane upload flavor:${{needs.pre_build.outputs.FLAVOR}} release_notes:"${{needs.pre_build.outputs.RELEASE_NOTES}}" type:${{ needs.pre_build.outputs.TYPE }} version_name:${{needs.pre_build.outputs.VERSION_NAME }} version_code:${{ needs.pre_build.outputs.VERSION_CODE}}
+          fastlane upload flavor:${{needs.build.outputs.FLAVOR}} release_notes:"${{needs.build.outputs.RELEASE_NOTES}}" type:${{ needs.build.outputs.TYPE }} version_name:${{needs.build.outputs.VERSION_NAME }} version_code:${{ needs.build.outputs.VERSION_CODE}}
       
       # Sending Mattermost update
       - name: Sending Mattermost update
         run: |
           cd  android
-          fastlane send_update_to_mattermost platform:"Android" flavor:${{needs.pre_build.outputs.FLAVOR}} release_notes:"${{needs.pre_build.outputs.RELEASE_NOTES}}" type:${{ needs.pre_build.outputs.TYPE }} version_name:${{needs.pre_build.outputs.VERSION_NAME }} version_code:${{ needs.pre_build.outputs.VERSION_CODE}} actor:"${{github.actor}}" branch:"${{github.event.ref}}"
+          fastlane send_update_to_mattermost platform:"Android" flavor:${{needs.build.outputs.FLAVOR}} release_notes:"${{needs.build.outputs.RELEASE_NOTES}}" type:${{ needs.build.outputs.TYPE }} version_name:${{needs.build.outputs.VERSION_NAME }} version_code:${{ needs.build.outputs.VERSION_CODE}} actor:"${{github.actor}}" branch:"${{github.event.ref}}"
