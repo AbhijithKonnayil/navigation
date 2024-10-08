@@ -211,7 +211,7 @@ jobs:
   upload:
     name: Upload
     needs: build
-    runs-on: [self-hosted, macOS, X64]
+    runs-on: macos-latest
     
     steps:
       - name: Set env variables
