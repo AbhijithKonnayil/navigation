@@ -113,7 +113,6 @@ jobs:
           IS_PRE_PROD_BUILD="false"
           IS_SECURE_BUILD="false"
 
-          #TAG_MESSAGE=$(git for-each-ref refs/tags/$TAG_NAME --format="%(contents)")
 
           if echo "$OPTIONAL_PRINT_OUT" | grep -q "universal"; then
               IS_UNIVERSAL_BUILD="true"
@@ -147,35 +146,43 @@ jobs:
       - name: Use extracted values
         run: |
           MODE="${{ needs.pre_build.outputs.MODE }}"
-
+          echo "MODE"
+          echo $MODE
           if [ "$MODE" = 'TAG' ]; then
-              TAG_NAME=${{needs.pre_build.outputs.TAG_NAME}}
-              VERSION_NAME=${{needs.pre_build.outputs.VERSION_NAME}}
-              VERSION_CODE=${{needs.pre_build.outputs.VERSION_CODE}}
-              RELEASE_NOTES=${{needs.pre_build.outputs.RELEASE_NOTES}}
-              ENV=${{needs.pre_build.outputs.ENV}}
-              COUNTRY=${{needs.pre_build.outputs.COUNTRY}}
-              TYPE=${{needs.pre_build.outputs.TYPE}}
-              IS_UNIVERSAL_BUILD=${{needs.pre_build.outputs.IS_UNIVERSAL_BUILD}}
-              IS_SECURE_BUILD=${{needs.pre_build.outputs.IS_SECURE_BUILD}}
-              IS_PRE_PROD_BUILD=${{needs.pre_build.outputs.IS_PRE_PROD_BUILD}}
-              COMMIT_HASH=$(git rev-list -n 1 $TAG_NAME) 
-              RELEASE_NOTES=$(git tag -l $TAG_NAME --format='%(subject)')
+              TAG_NAME="${{ needs.pre_build.outputs.TAG_NAME }}"
+              VERSION_NAME="${{ needs.pre_build.outputs.VERSION_NAME }}"
+              VERSION_CODE="${{ needs.pre_build.outputs.VERSION_CODE }}"
+              RELEASE_NOTES="${{ needs.pre_build.outputs.RELEASE_NOTES }}"
+              ENV="${{ needs.pre_build.outputs.ENV }}"
+              COUNTRY="${{ needs.pre_build.outputs.COUNTRY }}"
+              TYPE="${{ needs.pre_build.outputs.TYPE }}"
+              IS_UNIVERSAL_BUILD="${{ needs.pre_build.outputs.IS_UNIVERSAL_BUILD }}"
+              IS_SECURE_BUILD="${{ needs.pre_build.outputs.IS_SECURE_BUILD }}"
+              IS_PRE_PROD_BUILD="${{ needs.pre_build.outputs.IS_PRE_PROD_BUILD }}"
+
+              # Get the commit hash for the tag
+              COMMIT_HASH=$(git rev-list -n 1 "$TAG_NAME") 
+
+              # Get the release notes for the tag
+              RELEASE_NOTES=$(git tag -l "$TAG_NAME" --format='%(subject)')
+
+              # Output the tag details (optional)
               git tag -n9 
-              git tag -l $TAG_NAME --format='%(subject)'
-              git tag -l --format='%(subject)'
-              echo $RELEASE_NOTES
+              git tag -l "$TAG_NAME" --format='%(subject)'
+              echo "$RELEASE_NOTES"
           else
-              VERSION_NAME=${{ github.event.inputs.version_name}}
-              VERSION_CODE=${{ github.event.inputs.version_code}}
-              RELEASE_NOTES=${{ github.event.inputs.release_notes}}
-              ENV=${{ github.event.inputs.env}}
-              COUNTRY=${{ github.event.inputs.country}}
-              TYPE=${{ github.event.inputs.type}}
-              IS_UNIVERSAL_BUILD=${{ github.event.inputs.is_universal}}
-              IS_SECURE_BUILD=${{ github.event.inputs.is_preprod}}
-              IS_PRE_PROD_BUILD=${{ github.event.inputs.is_secure}}
+              echo "inside else"
+              VERSION_NAME="${{ github.event.inputs.version_name }}"
+              VERSION_CODE="${{ github.event.inputs.version_code }}"
+              RELEASE_NOTES="${{ github.event.inputs.release_notes }}"
+              ENV="${{ github.event.inputs.env }}"
+              COUNTRY="${{ github.event.inputs.country }}"
+              TYPE="${{ github.event.inputs.type }}"
+              IS_UNIVERSAL_BUILD="${{ github.event.inputs.is_universal }}"
+              IS_SECURE_BUILD="${{ github.event.inputs.is_secure }}"
+              IS_PRE_PROD_BUILD="${{ github.event.inputs.is_preprod }}"
           fi
+
           
           COUNTRY_SENTANCE_CASE="$(echo "${COUNTRY:0:1}" | tr '[:lower:]' '[:upper:]')$(echo "${COUNTRY:1}" | tr '[:upper:]' '[:lower:]')"
           FLAVOR="${ENV}${COUNTRY_SENTANCE_CASE}"
