@@ -70,6 +70,7 @@ jobs:
     runs-on: macos-latest
     outputs:
       MODE: ${{ steps.set_output.outputs.MODE }}
+      TAG_NAME: ${{ steps.set_output.outputs.TAG_NAME }}
       VERSION_NAME: ${{ steps.set_output.outputs.VERSION_NAME }}
       VERSION_CODE: ${{ steps.set_output.outputs.VERSION_CODE }}
       RELEASE_NOTES: ${{ steps.set_output.outputs.RELEASE_NOTES}}
@@ -127,6 +128,7 @@ jobs:
           fi
 
           echo "::set-output name=MODE::TAG"
+          echo "::set-output name=TAG_NAME::$TAG_NAME"
           echo "::set-output name=VERSION_NAME::$VERSION_NAME"
           echo "::set-output name=VERSION_CODE::$VERSION_CODE"
           echo "::set-output name=RELEASE_NOTES::$RELEASE_NOTES"
@@ -147,6 +149,7 @@ jobs:
           MODE="${{ needs.pre_build.outputs.MODE }}"
 
           if [ "$MODE" = 'TAG' ]; then
+              TAG_NAME=${{needs.pre_build.outputs.TAG_NAME}}
               VERSION_NAME=${{needs.pre_build.outputs.VERSION_NAME}}
               VERSION_CODE=${{needs.pre_build.outputs.VERSION_CODE}}
               RELEASE_NOTES=${{needs.pre_build.outputs.RELEASE_NOTES}}
@@ -156,6 +159,8 @@ jobs:
               IS_UNIVERSAL_BUILD=${{needs.pre_build.outputs.IS_UNIVERSAL_BUILD}}
               IS_SECURE_BUILD=${{needs.pre_build.outputs.IS_SECURE_BUILD}}
               IS_PRE_PROD_BUILD=${{needs.pre_build.outputs.IS_PRE_PROD_BUILD}}
+              COMMIT_HASH=$(git rev-list -n 1 $TAG_NAME) 
+              RELEASE_NOTES=$(git log -1 --pretty=%B $COMMIT_HASH)
           else
               VERSION_NAME=${{ github.event.inputs.version_name}}
               VERSION_CODE=${{ github.event.inputs.version_code}}
@@ -167,11 +172,10 @@ jobs:
               IS_SECURE_BUILD=${{ github.event.inputs.is_preprod}}
               IS_PRE_PROD_BUILD=${{ github.event.inputs.is_secure}}
           fi
-          COMMIT_HASH=$(git rev-list -n 1 $TAG_NAME) 
-          TAG_MESSAGE=$(git log -1 --pretty=%B $COMMIT_HASH)
+          
           COUNTRY_SENTANCE_CASE="$(echo "${COUNTRY:0:1}" | tr '[:lower:]' '[:upper:]')$(echo "${COUNTRY:1}" | tr '[:upper:]' '[:lower:]')"
           FLAVOR="${ENV}${COUNTRY_SENTANCE_CASE}"
 
           cd android
-          echo "fastlane publishBuildTest flavor:$FLAVOR release_notes:$TAG_MESSAGE type:$TYPE version_name:$VERSION_NAME version_code:$VERSION_CODE is_univeral_build:$IS_UNIVERSAL_BUILD is_preprod_build:$IS_PRE_PROD_BUILD is_secure_build:$IS_SECURE_BUILD"
-          fastlane publishBuildTest flavor:$FLAVOR release_notes:"$TAG_MESSAGE" type:$TYPE version_name:$VERSION_NAME version_code:$VERSION_CODE is_univeral_build:$IS_UNIVERSAL_BUILD is_preprod_build:$IS_PRE_PROD_BUILD is_secure_build:$IS_SECURE_BUILD
+          echo "fastlane publishBuildTest flavor:$FLAVOR release_notes:$RELEASE_NOTES type:$TYPE version_name:$VERSION_NAME version_code:$VERSION_CODE is_univeral_build:$IS_UNIVERSAL_BUILD is_preprod_build:$IS_PRE_PROD_BUILD is_secure_build:$IS_SECURE_BUILD"
+          fastlane publishBuildTest flavor:$FLAVOR release_notes:"$RELEASE_NOTES" type:$TYPE version_name:$VERSION_NAME version_code:$VERSION_CODE is_univeral_build:$IS_UNIVERSAL_BUILD is_preprod_build:$IS_PRE_PROD_BUILD is_secure_build:$IS_SECURE_BUILD
