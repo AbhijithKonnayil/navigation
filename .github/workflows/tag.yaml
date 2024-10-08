@@ -206,7 +206,7 @@ jobs:
       - name: REPEAT USING
         run: |
 
-          echo "fastlane publishBuildTest flavor:$FLAVOR release_notes:$RELEASE_NOTES type:$TYPE version_name:$VERSION_NAME version_code:$VERSION_CODE is_univeral_build:$IS_UNIVERSAL_BUILD is_preprod_build:$IS_PRE_PROD_BUILD is_secure_build:$IS_SECURE_BUILD"
+          echo "fastlane upload flavor:${{needs.build.outputs.FLAVOR}} release_notes:"${{needs.build.outputs.RELEASE_NOTES}}" type:${{ needs.build.outputs.TYPE }} version_name:${{needs.build.outputs.VERSION_NAME }} version_code:${{ needs.build.outputs.VERSION_CODE}} is_univeral_build:${{ needs.build.outputs.IS_UNIVERSAL_BUILD}} is_preprod_build:${{ needs.build.outputs.IS_PRE_PROD_BUILD}} is_secure_build:${{ needs.build.outputs.IS_SECURE_BUILD}}"
   
   upload:
     name: Upload
@@ -221,11 +221,10 @@ jobs:
       
       - name: Executing Fastlane Upload  
         run: |
-          cd android
-          fastlane upload flavor:${{needs.build.outputs.FLAVOR}} release_notes:"${{needs.build.outputs.RELEASE_NOTES}}" type:${{ needs.build.outputs.TYPE }} version_name:${{needs.build.outputs.VERSION_NAME }} version_code:${{ needs.build.outputs.VERSION_CODE}}
+          echo "fastlane upload flavor:${{needs.build.outputs.FLAVOR}} release_notes:"${{needs.build.outputs.RELEASE_NOTES}}" type:${{ needs.build.outputs.TYPE }} version_name:${{needs.build.outputs.VERSION_NAME }} version_code:${{ needs.build.outputs.VERSION_CODE}}"
+
       
       # Sending Mattermost update
       - name: Sending Mattermost update
         run: |
-          cd  android
-          fastlane send_update_to_mattermost platform:"Android" flavor:${{needs.build.outputs.FLAVOR}} release_notes:"${{needs.build.outputs.RELEASE_NOTES}}" type:${{ needs.build.outputs.TYPE }} version_name:${{needs.build.outputs.VERSION_NAME }} version_code:${{ needs.build.outputs.VERSION_CODE}} actor:"${{github.actor}}" branch:"${{github.event.ref}}"
+          echo "fastlane send_update_to_mattermost platform:"Android" flavor:${{needs.build.outputs.FLAVOR}} release_notes:"${{needs.build.outputs.RELEASE_NOTES}}" type:${{ needs.build.outputs.TYPE }} version_name:${{needs.build.outputs.VERSION_NAME }} version_code:${{ needs.build.outputs.VERSION_CODE}} actor:"${{github.actor}}" branch:"${{github.event.ref}}""
