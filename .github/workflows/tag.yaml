@@ -65,8 +65,7 @@ on:
         options:
           - true
           - false
-env:
-  WORKFLOW_VARIABLE: "anit"
+
 jobs:
   pre_build:
     runs-on: macos-latest
@@ -86,8 +85,6 @@ jobs:
     steps:
       - run: |
           echo "TAG CREATION"
-          echo WORKFLOW_VARIABLE
-          echo $WORKFLOW_VARIABLE
       - name: Set env
         id: set_output
         if: github.event_name == 'push'
@@ -145,6 +142,15 @@ jobs:
   build:
     runs-on: macos-latest
     needs: pre_build
+    outputs:
+      VERSION_NAME: ${{ steps.set_output.outputs.VERSION_NAME }}
+      VERSION_CODE: ${{ steps.set_output.outputs.VERSION_CODE }}
+      FLAVOR: ${{ steps.set_output.outputs.FLAVOR }}
+      RELEASE_NOTES: ${{ steps.set_output.outputs.RELEASE_NOTES }}
+      TYPE: ${{ steps.set_output.outputs.TYPE}}
+      IS_UNIVERSAL_BUILD: ${{ steps.set_output.outputs.IS_UNIVERSAL_BUILD}}
+      IS_SECURE_BUILD: ${{ steps.set_output.outputs.IS_SECURE_BUILD}}
+      IS_PRE_PROD_BUILD: ${{ steps.set_output.outputs.IS_PRE_PROD_BUILD}}
     steps:
       - uses: actions/checkout@v2
       - name: Use extracted values
@@ -155,9 +161,8 @@ jobs:
           echo "MODE"
           echo $MODE
           if [ "$MODE" = 'TAG' ]; then
-              #TAG_NAME="${{ needs.pre_build.outputs.TAG_NAME }}"
-              echo  "TAG_NAME="${{ needs.pre_build.outputs.TAG_NAME }}"" >> "$GITHUB_ENV"
-              echo  "VERSION_NAME="${{ needs.pre_build.outputs.VERSION_NAME }}"" >> "$GITHUB_ENV"
+              TAG_NAME="${{ needs.pre_build.outputs.TAG_NAME }}"
+              VERSION_NAME="${{ needs.pre_build.outputs.VERSION_NAME }}"
               VERSION_CODE="${{ needs.pre_build.outputs.VERSION_CODE }}"
               RELEASE_NOTES="${{ needs.pre_build.outputs.RELEASE_NOTES }}"
               ENV="${{ needs.pre_build.outputs.ENV }}"
@@ -186,12 +191,42 @@ jobs:
           COUNTRY_SENTANCE_CASE="$(echo "${COUNTRY:0:1}" | tr '[:lower:]' '[:upper:]')$(echo "${COUNTRY:1}" | tr '[:upper:]' '[:lower:]')"
           FLAVOR="${ENV}${COUNTRY_SENTANCE_CASE}"
 
+          echo "VERSION_NAME=$VERSION_NAME" >> $GITHUB_OUTPUT
+          echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_OUTPUT
+          echo "RELEASE_NOTES=$RELEASE_NOTES" >> $GITHUB_OUTPUT
+          echo "FLAVOR=$FLAVOR" >> $GITHUB_OUTPUT
+          echo "TYPE=$TYPE" >> $GITHUB_OUTPUT
+          echo "IS_UNIVERSAL_BUILD=$IS_UNIVERSAL_BUILD" >> $GITHUB_OUTPUT
+          echo "IS_SECURE_BUILD=$IS_SECURE_BUILD" >> $GITHUB_OUTPUT
+          echo "IS_PRE_PROD_BUILD=$IS_PRE_PROD_BUILD" >> $GITHUB_OUTPUT
+
           echo "fastlane publishBuildTest flavor:$FLAVOR release_notes:$RELEASE_NOTES type:$TYPE version_name:$VERSION_NAME version_code:$VERSION_CODE is_univeral_build:$IS_UNIVERSAL_BUILD is_preprod_build:$IS_PRE_PROD_BUILD is_secure_build:$IS_SECURE_BUILD"
           cd android
           echo "fastlane publishBuildTest flavor:$FLAVOR release_notes:$RELEASE_NOTES type:$TYPE version_name:$VERSION_NAME version_code:$VERSION_CODE is_univeral_build:$IS_UNIVERSAL_BUILD is_preprod_build:$IS_PRE_PROD_BUILD is_secure_build:$IS_SECURE_BUILD"
           fastlane publishBuildTest flavor:$FLAVOR release_notes:"$RELEASE_NOTES" type:$TYPE version_name:$VERSION_NAME version_code:$VERSION_CODE is_univeral_build:$IS_UNIVERSAL_BUILD is_preprod_build:$IS_PRE_PROD_BUILD is_secure_build:$IS_SECURE_BUILD
       - name: REPEAT USING
         run: |
-          echo WORKFLOW_VARIABLE
-          echo $WORKFLOW_VARIABLE
+
           echo "fastlane publishBuildTest flavor:$FLAVOR release_notes:$RELEASE_NOTES type:$TYPE version_name:$VERSION_NAME version_code:$VERSION_CODE is_univeral_build:$IS_UNIVERSAL_BUILD is_preprod_build:$IS_PRE_PROD_BUILD is_secure_build:$IS_SECURE_BUILD"
+  
+  upload:
+    name: Upload
+    needs: build
+    runs-on: [self-hosted, macOS, X64]
+    
+    steps:
+      - name: Set env variables
+        run: |
+          #write serice.json file path to GOOGLE_APPLICATION_CREDENTIALS env
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$(readlink -f ../service.json)" >> "$GITHUB_ENV"
+      
+      - name: Executing Fastlane Upload  
+        run: |
+          cd android
+          fastlane upload flavor:${{needs.pre_build.outputs.FLAVOR}} release_notes:"${{needs.pre_build.outputs.RELEASE_NOTES}}" type:${{ needs.pre_build.outputs.TYPE }} version_name:${{needs.pre_build.outputs.VERSION_NAME }} version_code:${{ needs.pre_build.outputs.VERSION_CODE}}
+      
+      # Sending Mattermost update
+      - name: Sending Mattermost update
+        run: |
+          cd  android
+          fastlane send_update_to_mattermost platform:"Android" flavor:${{needs.pre_build.outputs.FLAVOR}} release_notes:"${{needs.pre_build.outputs.RELEASE_NOTES}}" type:${{ needs.pre_build.outputs.TYPE }} version_name:${{needs.pre_build.outputs.VERSION_NAME }} version_code:${{ needs.pre_build.outputs.VERSION_CODE}} actor:"${{github.actor}}" branch:"${{github.event.ref}}"
