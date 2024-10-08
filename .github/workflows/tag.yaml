@@ -173,8 +173,8 @@ jobs:
               echo "$TAG_MESSAGE"
               echo "$RELEASE_NOTES"
 
-              #git fetch --depth=1 origin +refs/tags/*:refs/tags/*
-              git fetch --depth=1 origin tag $TAG_NAME
+              git fetch --depth=1 origin +refs/tags/*:refs/tags/*
+              git fetch --depth=1 origin refs/tags/$TAG_NAME:refs/tags/$TAG_NAME
               git tag -l --format='%(contents:subject)' ${GITHUB_REF#refs/*/}
               echo "TAG_MESSAGE=$(git tag -l --format='%(contents:subject)'${GITHUB_REF#refs/*/})" 
           else
