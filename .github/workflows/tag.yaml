@@ -160,7 +160,7 @@ jobs:
               IS_SECURE_BUILD=${{needs.pre_build.outputs.IS_SECURE_BUILD}}
               IS_PRE_PROD_BUILD=${{needs.pre_build.outputs.IS_PRE_PROD_BUILD}}
               COMMIT_HASH=$(git rev-list -n 1 $TAG_NAME) 
-              RELEASE_NOTES=$(git log -1 --pretty=%B $COMMIT_HASH)
+              RELEASE_NOTES=$(git tag -l $TAG_NAME --format='%(subject)')
           else
               VERSION_NAME=${{ github.event.inputs.version_name}}
               VERSION_CODE=${{ github.event.inputs.version_code}}
