@@ -5,30 +5,6 @@ on:
       - 'AOS-v*'
   workflow_dispatch:
     inputs:
-      is_universal:
-        description: 'Universal Build'
-        required: false
-        default: 'false'
-        type: choice
-        options:
-          - true
-          - false
-      is_preprod:
-        description: 'Pre Prod Build'
-        required: false
-        default: 'false'
-        type: choice
-        options:
-          - true
-          - false
-      is_secure:
-        description: 'Secure'
-        required: false
-        default: 'false'
-        type: choice
-        options:
-          - true
-          - false
       country:
         description: 'Country'     
         required: true
@@ -64,7 +40,32 @@ on:
         required: true
       version_code:
         description: 'Version Code [refer firebase]'
-        required: true 
+        required: true
+      is_universal:
+        description: 'Universal Build'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - true
+          - false
+      is_preprod:
+        description: 'Pre Prod Build'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - true
+          - false
+      is_secure:
+        description: 'Secure'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - true
+          - false
+      
 jobs:
   pre_build:
     runs-on: macos-latest
@@ -129,7 +130,7 @@ jobs:
           echo "::set-output name=MODE::TAG"
           echo "::set-output name=TAG_NAME::$TAG_NAME"
           echo "::set-output name=VERSION_NAME::$VERSION_NAME"
-          echo "::set-output name=VERSION_CODE::$VERSION_CODE"
+          echo "VERSION_CODE=$VERSION_CODE" >> $GITHUB_OUTPUT
           echo "::set-output name=RELEASE_NOTES::$RELEASE_NOTES"
           echo "::set-output name=ENV::$ENV"
           echo "::set-output name=COUNTRY::$COUNTRY"
@@ -160,22 +161,9 @@ jobs:
               IS_SECURE_BUILD="${{ needs.pre_build.outputs.IS_SECURE_BUILD }}"
               IS_PRE_PROD_BUILD="${{ needs.pre_build.outputs.IS_PRE_PROD_BUILD }}"
 
-              # Get the commit hash for the tag
-              COMMIT_HASH=$(git rev-list -n 1 "$TAG_NAME") 
-
-              # Get the release notes for the tag
-              RELEASE_NOTES=$(git tag -l "$TAG_NAME" --format='%(subject)')
-
-              # Output the tag details (optional)
-              git tag -n9 
-              git tag -l "$TAG_NAME" --format='%(subject)'
-              TAG_MESSAGE=$(git for-each-ref refs/tags/$TAG_NAME --format="%(contents)")
-
-              #git fetch --depth=1 origin +refs/tags/*:refs/tags/*
               git fetch --depth=1 origin +refs/tags/$TAG_NAME:refs/tags/$TAG_NAME
               RELEASE_NOTES=$(git tag -l --format='%(contents:subject)' ${GITHUB_REF#refs/*/})
           else
-              echo "inside else"
               VERSION_NAME="${{ github.event.inputs.version_name }}"
               VERSION_CODE="${{ github.event.inputs.version_code }}"
               RELEASE_NOTES="${{ github.event.inputs.release_notes }}"
