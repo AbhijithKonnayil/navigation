@@ -117,7 +117,7 @@ platform :android do
             version_name:version_name,
             version_code:version_code,
             enc_default_key:enc_default_key,
-            enc_prod_key:enc_prod_key
+            enc_prod_key:enc_prod_key,
             is_univeral_build:is_univeral_build,
             is_preprod_build:is_preprod_build,
             is_secure_build:is_secure_build
