@@ -7,6 +7,7 @@ import 'package:navigation/routes/router.dart';
 import '../firebase_options.dart';
 
 startApp() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -63,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'You have pushed the button this many times:',
+              'You have pushed the button this many times: x',
             ),
             Text(
               '$_counter',

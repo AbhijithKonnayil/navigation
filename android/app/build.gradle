@@ -65,9 +65,9 @@ android {
         applicationId "com.example.navigation"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion 19
+        minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
-        versionCode 31
+        versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         //setProperty("archivesBaseName", "${variant.productFlavors[0].name}")
 
@@ -116,9 +116,9 @@ android {
 
  def getSigningConfigDetails (String countryCode)  {
         def keystoreProperties = new Properties()
-        def keystorePropertiesFile = rootProject.file("../../country_keys_test/$countryCode/shop_app.properties")
+        def keystorePropertiesFile = rootProject.file("../../shop_app_configs_test/country_specific_keys/$countryCode/shop_app.properties")
         if (keystorePropertiesFile.exists()) {
-        print("App Building using proper keystore - key.properties")
+        print("App Building using proper keystore - shop_app.properties")
         keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
         return [keystoreProperties['storeFile'],keystoreProperties['storePassword'],keystoreProperties['keyAlias'],keystoreProperties['keyPassword']]
         }else{
