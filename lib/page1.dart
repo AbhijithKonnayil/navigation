@@ -40,8 +40,8 @@ class Page2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder(
-      child: Text("Page 2"),
+    return const Scaffold(
+      body: Center(child: Text("Page 2")),
     );
   }
 }

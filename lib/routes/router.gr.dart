@@ -15,6 +15,18 @@ abstract class _$AppRouter extends RootStackRouter {
 
   @override
   final Map<String, PageFactory> pagesMap = {
+    OfferPageRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const OfferView(),
+      );
+    },
+    HomePageRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const HomeView(),
+      );
+    },
     OneRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
@@ -39,15 +51,65 @@ abstract class _$AppRouter extends RootStackRouter {
         child: const Page2(),
       );
     },
-    MyHomeRoute.name: (routeData) {
-      final args = routeData.argsAs<MyHomeRouteArgs>(
-          orElse: () => const MyHomeRouteArgs());
+    ChatPageRoute.name: (routeData) {
       return AutoRoutePage<dynamic>(
         routeData: routeData,
-        child: MyHomePage(key: args.key),
+        child: const ChatView(),
+      );
+    },
+    ShopPageRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const ShopView(),
+      );
+    },
+    AccountPageRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const AccountView(),
+      );
+    },
+    MyHomeRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const MyHomePage(),
+      );
+    },
+    BasePageRoute.name: (routeData) {
+      return AutoRoutePage<dynamic>(
+        routeData: routeData,
+        child: const BaseView(),
       );
     },
   };
+}
+
+/// generated route for
+/// [OfferView]
+class OfferPageRoute extends PageRouteInfo<void> {
+  const OfferPageRoute({List<PageRouteInfo>? children})
+      : super(
+          OfferPageRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'OfferPageRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [HomeView]
+class HomePageRoute extends PageRouteInfo<void> {
+  const HomePageRoute({List<PageRouteInfo>? children})
+      : super(
+          HomePageRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'HomePageRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
 /// generated route for
@@ -107,29 +169,71 @@ class Page2R extends PageRouteInfo<void> {
 }
 
 /// generated route for
+/// [ChatView]
+class ChatPageRoute extends PageRouteInfo<void> {
+  const ChatPageRoute({List<PageRouteInfo>? children})
+      : super(
+          ChatPageRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ChatPageRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [ShopView]
+class ShopPageRoute extends PageRouteInfo<void> {
+  const ShopPageRoute({List<PageRouteInfo>? children})
+      : super(
+          ShopPageRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'ShopPageRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
+/// [AccountView]
+class AccountPageRoute extends PageRouteInfo<void> {
+  const AccountPageRoute({List<PageRouteInfo>? children})
+      : super(
+          AccountPageRoute.name,
+          initialChildren: children,
+        );
+
+  static const String name = 'AccountPageRoute';
+
+  static const PageInfo<void> page = PageInfo<void>(name);
+}
+
+/// generated route for
 /// [MyHomePage]
-class MyHomeRoute extends PageRouteInfo<MyHomeRouteArgs> {
-  MyHomeRoute({
-    Key? key,
-    List<PageRouteInfo>? children,
-  }) : super(
+class MyHomeRoute extends PageRouteInfo<void> {
+  const MyHomeRoute({List<PageRouteInfo>? children})
+      : super(
           MyHomeRoute.name,
-          args: MyHomeRouteArgs(key: key),
           initialChildren: children,
         );
 
   static const String name = 'MyHomeRoute';
 
-  static const PageInfo<MyHomeRouteArgs> page = PageInfo<MyHomeRouteArgs>(name);
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
 
-class MyHomeRouteArgs {
-  const MyHomeRouteArgs({this.key});
+/// generated route for
+/// [BaseView]
+class BasePageRoute extends PageRouteInfo<void> {
+  const BasePageRoute({List<PageRouteInfo>? children})
+      : super(
+          BasePageRoute.name,
+          initialChildren: children,
+        );
 
-  final Key? key;
+  static const String name = 'BasePageRoute';
 
-  @override
-  String toString() {
-    return 'MyHomeRouteArgs{key: $key}';
-  }
+  static const PageInfo<void> page = PageInfo<void>(name);
 }
