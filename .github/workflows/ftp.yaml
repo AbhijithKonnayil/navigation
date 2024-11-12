@@ -25,6 +25,8 @@ jobs:
   build:
     runs-on: macos-latest
     steps:
+      - name: pwd
+        run: pwd
       - name: FTP-Deploy-Action
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
         with:
