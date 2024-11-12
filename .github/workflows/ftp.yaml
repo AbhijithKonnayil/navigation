@@ -1,0 +1,35 @@
+name: ftp
+on:
+  workflow_dispatch:
+    inputs:
+      flavor:
+        description: 'Flavor'     
+        required: true
+        default: 'devGlobal'
+        type: choice
+        options:
+          - prodGlobal
+          - stgGlobal
+          - devGlobal
+      type:
+        description: 'Build Type - release/debug'     
+        required: true
+        default: 'debug'
+        type: choice
+        options:
+          - debug
+          - release
+      release_notes:
+        description: 'Release Notes'  
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: FTP-Deploy-Action
+        uses: SamKirkland/FTP-Deploy-Action@4.3.3
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./web/
+          server-dir: /htdocs/
