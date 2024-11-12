@@ -29,6 +29,10 @@ platform :android do
     buildNumber=options[:version_code]
     enc_prod_key=options[:enc_prod_key]
     enc_default_key=options[:enc_default_key]
+    is_univeral_build=options[:is_univeral_build]
+    is_preprod_build=options[:is_preprod_build]
+    is_secure_build=options[:is_secure_build]
+
     puts "enc key in build"
     puts enc_default_key
     puts enc_prod_key
@@ -71,15 +75,20 @@ platform :android do
     version_code=options[:version_code ]
     enc_prod_key=options[:enc_prod_key]
     enc_default_key=options[:enc_default_key]
-    
+
+    is_univeral_build=options[:is_univeral_build]
+    is_preprod_build=options[:is_preprod_build]
+    is_secure_build=options[:is_secure_build]
+
+
     puts flavor
     puts type
     puts version_code
     puts version_name
     puts release_notes
-    puts "universal build :#{options[:is_univeral_build]}"
-    puts "pre prod build :#{options[:is_preprod_build]}"
-    puts "pre secure build :#{options[:is_secure_build]}"
+    puts "universal build :#{is_univeral_build}"
+    puts "pre prod build :#{is_preprod_build}"
+    puts "pre secure build :#{:is_secure_build}"
   end
 
   desc "Publish App to Firebase"
@@ -94,6 +103,10 @@ platform :android do
     version_code=options[:version_code ]
     enc_prod_key=options[:enc_prod_key]
     enc_default_key=options[:enc_default_key]
+    is_univeral_build=options[:is_univeral_build]
+    is_preprod_build=options[:is_preprod_build]
+    is_secure_build=options[:is_secure_build]
+
     puts "enc key"
     puts enc_default_key
     puts enc_prod_key
@@ -104,7 +117,10 @@ platform :android do
             version_name:version_name,
             version_code:version_code,
             enc_default_key:enc_default_key,
-            enc_prod_key:enc_prod_key
+            enc_prod_key:enc_prod_key,
+            is_univeral_build:is_univeral_build,
+            is_preprod_build:is_preprod_build,
+            is_secure_build:is_secure_build
             )
     firebase_app_distribution(
       app: "1:337613462775:android:a0562f974110a561b907f2",
