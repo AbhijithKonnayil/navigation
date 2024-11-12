@@ -38,6 +38,12 @@ dependencies:
   auto_route: ^6.4.0
   flutter_flavor: ^3.1.1
   firebase_core: ^2.24.2
+  flutter_bloc: ^8.1.6
+  dio: ^5.7.0
+  get_it: ^8.0.1
+  provider: ^6.1.2
+  http: ^1.2.2
+  mockito: ^5.4.4
 
 dev_dependencies:
   flutter_test:
@@ -50,7 +56,7 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
   auto_route_generator: ^6.2.0
-  build_runner: ^2.4.6
+  build_runner: ^2.4.11
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
