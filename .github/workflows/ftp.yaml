@@ -42,6 +42,8 @@ jobs:
           #cp source build_apks/
           touch build_apks/test.txt
 
+          cat release_list.json
+          
           VERSION_NAME="1.1.1"
           VERSION_CODE="1234"
           TIMESTAMP=$(date "+%F %T %A" )
@@ -53,6 +55,8 @@ jobs:
 
           cd ..
           sh release.sh version_name=$VERSION_NAME version_code=$VERSION_CODE timestamp=$TIMESTAMP size=$SIZE branch=$BRANCH release_notes=$RELEASE_NOTES link=$LINK apk_name=$APK_NAME
+
+          cat release_list.json
 
       - name: FTP-Deploy-Action
         uses: SamKirkland/FTP-Deploy-Action@4.3.3

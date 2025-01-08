@@ -1,6 +1,6 @@
 #!/bin/bash
 
-json_file="release_list_1.json"
+json_file="release_list.json"
 
 #Named argument parser
 for ARGUMENT in "$@"; do
