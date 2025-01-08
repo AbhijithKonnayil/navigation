@@ -51,6 +51,7 @@ jobs:
           LINK="../build_apks/"
           APK_NAME="apk name"
 
+          cd ..
           sh release.sh version_name=$VERSION_NAME version_code=$VERSION_CODE timestamp=$TIMESTAMP size=$SIZE branch=$BRANCH release_notes=$RELEASE_NOTES link=$LINK apk_name=$APK_NAME
 
       - name: FTP-Deploy-Action
