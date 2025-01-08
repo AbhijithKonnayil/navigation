@@ -30,11 +30,35 @@ jobs:
         run: |
          pwd
          ls
+      - name: Generating FTP files
+        run: |
+          mkdir scic_app_distribution
+          cd scic_app_distribution
+
+          mkdir cicd
+          curl -X GET "https://raw.githubusercontent.com/AbhijithKonnayil/navigation/refs/heads/main/release_list_1.json" > cicd/release_list.json
+
+          mkdir build_apks
+          #cp source build_apks/
+          touch build_apks/test.txt
+
+          VERSION_NAME="1.1.1"
+          VERSION_CODE="1234"
+          TIMESTAMP=$(date "+%F %T %A" )
+          SIZE="12 MB"
+          BRANCH="release_senh_17_rc_1"
+          RELEASE_NOTES="this is release notes"
+          LINK="../build_apks/"
+          APK_NAME="apk name"
+
+          sh release.sh version_name=$VERSION_NAME version_code=$VERSION_CODE timestamp=$TIMESTAMP size=$SIZE branch=$BRANCH release_notes=$RELEASE_NOTES link=$LINK apk_name=$APK_NAME
+
       - name: FTP-Deploy-Action
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ${{ github.workspace }}/abhi/
-          server-dir: /htdocs/
+          server: ${{ secrets.FTP_SERVER_CN }}
+          username: ${{ secrets.FTP_USERNAME_CN }}
+          password: ${{ secrets.FTP_PASSWORD_CN }}
+          port: ${{ secrets.FTP_PORT_CN }}
+          local-dir: ${{ github.workspace }}/scic_app_distribution/cicd
+          server-dir: /cicd/
