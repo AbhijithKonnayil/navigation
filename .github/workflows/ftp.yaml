@@ -61,5 +61,5 @@ jobs:
           username: ${{ secrets.FTP_USERNAME_CN }}
           password: ${{ secrets.FTP_PASSWORD_CN }}
           port: ${{ secrets.FTP_PORT_CN }}
-          local-dir: ${{ github.workspace }}/scic_app_distribution/cicd
+          local-dir: ${{ github.workspace }}/scic_app_distribution/cicd/
           server-dir: /cicd/
