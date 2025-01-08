@@ -61,7 +61,7 @@ jobs:
 
           cat scic_app_distribution/cicd/release_list.json
 
-      - name: FTP-Deploy-Action
+      - name: FTP-Deploy-Action-Release-List
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
         with:
           server: ${{ secrets.FTP_SERVER_CN }}
@@ -70,3 +70,12 @@ jobs:
           port: ${{ secrets.FTP_PORT_CN }}
           local-dir: ${{ github.workspace }}/scic_app_distribution/cicd/
           server-dir: /cicd/
+      - name: FTP-Deploy-Action-Build
+        uses: SamKirkland/FTP-Deploy-Action@4.3.3
+        with:
+          server: ${{ secrets.FTP_SERVER_CN }}
+          username: ${{ secrets.FTP_USERNAME_CN }}
+          password: ${{ secrets.FTP_PASSWORD_CN }}
+          port: ${{ secrets.FTP_PORT_CN }}
+          local-dir: ${{ github.workspace }}/scic_app_distribution/cicd/build_apks/
+          server-dir: /cicd/build_apks/
