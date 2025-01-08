@@ -1,6 +1,7 @@
 #!/bin/bash
-
-json_file="release_list.json"
+pwd
+ls
+json_file="scic_app_distribution/cicd/release_list.json"
 
 #Named argument parser
 for ARGUMENT in "$@"; do

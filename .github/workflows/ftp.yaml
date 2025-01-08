@@ -42,6 +42,9 @@ jobs:
           #cp source build_apks/
           touch build_apks/test.txt
 
+          ls
+          ls build_apks
+
           cat cicd/release_list.json
           
           VERSION_NAME="1.1.1"
