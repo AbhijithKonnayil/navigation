@@ -42,8 +42,8 @@ jobs:
           #cp source build_apks/
           touch build_apks/test.txt
 
-          ls
-          ls build_apks
+          #ls
+          #ls build_apks
 
           cat cicd/release_list.json
           
@@ -55,11 +55,11 @@ jobs:
           RELEASE_NOTES="this is release notes"
           LINK="../build_apks/"
           APK_NAME="apk name"
-
+          echo $TIMESTAMP
           cd ..
           sh release.sh version_name=$VERSION_NAME version_code=$VERSION_CODE timestamp=$TIMESTAMP size=$SIZE branch=$BRANCH release_notes=$RELEASE_NOTES link=$LINK apk_name=$APK_NAME
 
-          cat cicd/release_list.json
+          cat scic_app_distribution/cicd/release_list.json
 
       - name: FTP-Deploy-Action
         uses: SamKirkland/FTP-Deploy-Action@4.3.3

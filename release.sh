@@ -9,7 +9,8 @@ for ARGUMENT in "$@"; do
 
     KEY_LENGTH=${#KEY}
     VALUE="${ARGUMENT:$KEY_LENGTH+1}"
-
+    echo "key-> $KEY"
+    echo "value-> $VALUE"
     export "$KEY"="$VALUE"
 done
 # New data to add, with variables expanded
