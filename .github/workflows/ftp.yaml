@@ -57,7 +57,7 @@ jobs:
           APK_NAME="apk name"
           echo $TIMESTAMP
           cd ..
-          sh release.sh version_name=$VERSION_NAME version_code=$VERSION_CODE timestamp=$TIMESTAMP size=$SIZE branch=$BRANCH release_notes=$RELEASE_NOTES link=$LINK apk_name=$APK_NAME
+          sh release.sh version_name=$VERSION_NAME version_code=$VERSION_CODE timestamp="$TIMESTAMP" size=$SIZE branch=$BRANCH release_notes=$RELEASE_NOTES link=$LINK apk_name=$APK_NAME
 
           cat scic_app_distribution/cicd/release_list.json
 
